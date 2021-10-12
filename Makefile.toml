@@ -1,0 +1,88 @@
+[env]
+CARGO_MAKE_TEST_USE_MULTI_TEST_PHASES = true  # This means that test-custom will run in test-flow
+DYLIB_PATH = "target/debug/libqcs.dylib"
+
+[tasks.lint]
+workspace = false
+dependencies = ["clippy-flow"]
+
+[tasks.deny]
+workspace = false
+install_crate = "cargo-deny"
+command = "cargo"
+args = ["deny", "--all-features", "check"]
+
+[tasks.pre-ci-flow]
+dependencies = ["deny", "lint"]
+
+[tasks.mdbook]
+install_crate = { crate_name = "mdbook", binary = "mdbook", test_arg = "help" }
+
+[tasks.mdbook-linkcheck]
+install_crate = { crate_name = "mdbook-linkcheck", binary = "mdbook-linkcheck", test_arg = "--help" }
+
+[tasks.mdbook-mermaid]
+install_crate = { crate_name = "mdbook-mermaid", binary = "mdbook-mermaid", test_arg = "--help" }
+
+[tasks.book]
+workspace = false
+dependencies = ["mdbook", "mdbook-linkcheck", "mdbook-mermaid"]
+command = "mdbook"
+args = ["build", "book"]
+
+[tasks.serve-book]
+workspace = false
+dependencies = ["mdbook", "mdbook-linkcheck", "mdbook-mermaid"]
+install_crate = { crate_name = "mdbook", binary = "mdbook", test_arg = "help" }
+command = "mdbook"
+args = ["serve", "book", "--open"]
+
+[tasks.cbindgen]
+workspace = false
+install_crate = { crate_name = "cbindgen", binary = "cbindgen", test_arg = "--help" }
+command = "cbindgen"
+args = ["--config=cbindgen.toml", "--output=libqcs.h"]
+
+# This task runs implicitly before `build` which runs as part of the default rule
+[tasks.pre-build]
+dependencies = ["cbindgen"]
+
+[tasks.release-flow]
+env = {"DYLIB_PATH" = "target/release/libqcs.dylib"}
+run_task = "build-release-and-copy-artifacts"
+
+[tasks.build-release-and-copy-artifacts]
+dependencies = ["build-release", "post-build", "copy-artifacts"]
+
+[tasks.copy-artifacts.mac]
+script = """
+cp "${DYLIB_PATH}" libqcs.dylib
+"""
+
+[tasks.detect-leaks]
+script = """
+/usr/local/opt/llvm/bin/clang -fsanitize=address -g tests/integration_tests.c "${DYLIB_PATH}" -o tests.o
+ASAN_OPTIONS=detect_leaks=1 ./tests.o
+"""
+
+[tasks.test-custom.mac]
+script = """
+clang tests/integration_tests.c ${DYLIB_PATH} -o tests.o
+./tests.o
+rm -rf tests.o tests.o.dSYM
+"""
+
+[tasks.test-custom.linux]
+script = """
+clang tests/integration_tests.c target/debug/libqcs.so -o tests.o
+./tests.o
+rm -rf tests.o tests.o.dSYM
+"""
+
+[tasks.pre-test]
+command = "docker-compose"
+args = ["up", "-d"]
+
+[tasks.post-test]
+command = "docker-compose"
+args = ["down"]

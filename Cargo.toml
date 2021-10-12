@@ -1,0 +1,20 @@
+[package]
+name = "qcs-sdk-c"
+description = "C bindings to the qcs-sdk-rust crate."
+version = "0.0.0"
+edition = "2018"
+license = "Apache-2.0"
+repository = "https://github.com/rigetti/qcs-sdk-c"
+keywords = ["C", "SDK", "Rigetti", "Quil", "Quantum"]
+categories = ["api-bindings", "compilers", "science"]
+publish = false
+
+[lib]
+name = "qcs"
+crate-type = ["cdylib"]
+
+[dependencies]
+eyre = "0.6.5"
+http = "0.2.4"
+qcs = { version = "0.0.0", git = "https://github.com/rigetti/qcs-sdk-rust" }
+tokio = { version = "1.7.1", features = ["rt-multi-thread"] }

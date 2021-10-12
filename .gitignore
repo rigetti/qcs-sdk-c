@@ -1,0 +1,13 @@
+target/
+book/book/
+
+# Clang debug / memory detection / test artifacts
+*.dSYM
+*.o
+*.dylib
+
+# JetBrains
+.idea
+
+# macOS
+.DS_Store
