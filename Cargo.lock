@@ -808,8 +808,9 @@ dependencies = [
 
 [[package]]
 name = "qcs"
-version = "0.0.0"
-source = "git+https://github.com/rigetti/qcs-sdk-rust#38dcb7f26bd4ddbc349cbfbe815b5b3ac9e67c6a"
+version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5098aa2b23b472c646277bff6bc8b9d6bff818ae29f9061656902a7eda9bc119"
 dependencies = [
  "dirs",
  "enum-as-inner",
@@ -820,7 +821,7 @@ dependencies = [
  "log",
  "num",
  "qcs-api",
- "quil",
+ "quil-rs",
  "reqwest",
  "rmp-serde",
  "serde",
@@ -835,8 +836,9 @@ dependencies = [
 
 [[package]]
 name = "qcs-api"
-version = "0.0.0"
-source = "git+https://github.com/rigetti/qcs-sdk-rust#38dcb7f26bd4ddbc349cbfbe815b5b3ac9e67c6a"
+version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aeb427652ff27d02cc7a78fbccbd822c3beaf792f0edeefbe30c89bed57cb4eb"
 dependencies = [
  "reqwest",
  "serde",
@@ -856,9 +858,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "quil"
-version = "0.5.3"
-source = "git+https://github.com/rigetti/quil-rust.git?branch=sdk-requirements#747a9d6dc55eca86fa6c8ccd8924ab6afee124ff"
+name = "quil-rs"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "99eb6a9f67b64905b282ba9cb06452e3e1bcc46bf9ee46bddf366e6528947da1"
 dependencies = [
  "indexmap",
  "lexical",
