@@ -24,7 +24,7 @@ Finally, this project uses [cargo-make] in order to orchestrate build tasks, so 
 
 ## Documentation
 
-[qcs-sdk-c] is documented using [mdBook]. You can use `makers book` to build it or `makers serve-book` to run a local webserver which will watch for _some_ changes.
+This library is documented using [mdBook]. The hosted version can be found [GitHub Pages]. You can use `makers book` to build it or `makers serve-book` to run a local webserver which will watch for _some_ changes.
 
 [rustup]: https://rustup.rs/
 [ØMQ]: https://zeromq.org/
@@ -34,3 +34,4 @@ Finally, this project uses [cargo-make] in order to orchestrate build tasks, so 
 [cargo-make]: https://sagiegurari.github.io/cargo-make/
 [mdbook]: https://rust-lang.github.io/mdBook/
 [the Rust QCS SDK]: https://github.com/rigetti/qcs-sdk-rust
+[GitHub Pages]: https://rigetti.github.io/qcs-sdk-c/
