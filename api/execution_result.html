@@ -140,11 +140,24 @@
 <p><strong>You must pass this struct to <a href="free_execution_result.html"><code>free_execution_result</code></a> when you're done with it to avoid leaking the memory.</strong></p>
 <p><strong>Any <a href="execution_data.html"><code>ExecutionData</code></a> which was retrieved from this result will be freed when this is called.</strong></p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
-<pre><code class="language-c">
+<pre><code class="language-c">typedef struct ExecutionResult {
+    ExecutionResult_Tag tag;
+    union {
+        struct {
+            struct ResultHandle *handle;
+        };
+        struct {
+            char *error;
+        };
+    };
+} ExecutionResult;
 </code></pre>
 <h2 id="variants"><a class="header" href="#variants">Variants</a></h2>
 <p>There are multiple variants of <code>ExecutionResult</code>. The <code>tag</code> attribute determines which is in use via an enum:</p>
-<pre><code class="language-c">
+<pre><code class="language-c">typedef enum ExecutionResult_Tag {
+    ExecutionResult_Handle,
+    ExecutionResult_Error,
+} ExecutionResult_Tag;
 </code></pre>
 <p>The <a href="#error"><code>Error</code></a> variant indicates that execution failed. The <a href="#handle"><code>Handle</code></a> variant is populated in the case of a successful run, and provides access to a <a href="result_handle.html"><code>ResultHandle</code></a>.</p>
 <h3 id="error"><a class="header" href="#error"><code>Error</code></a></h3>

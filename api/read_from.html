@@ -137,7 +137,7 @@
                         <h1 id="read_from"><a class="header" href="#read_from">read_from</a></h1>
 <p>Set the memory location to read out of for an <a href="executable.html"><code>Executable</code></a>. If not set, the <a href="executable.html"><code>Executable</code></a> assumes a default of &quot;ro&quot;. You can call this function multiple times to read from multiple registers. The first time you call the function, the default of &quot;ro&quot; is not longer relevant.</p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
-<pre><code class="language-C">
+<pre><code class="language-C">void read_from(struct Executable *executable, char *name);
 </code></pre>
 <h2 id="arguments"><a class="header" href="#arguments">Arguments</a></h2>
 <ol>

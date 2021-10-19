@@ -137,11 +137,28 @@
                         <h1 id="executiondata"><a class="header" href="#executiondata">ExecutionData</a></h1>
 <p><code>ExecutionData</code> contains the actual results of an execution, you get a pointer to one by calling <a href="get_data.html"><code>get_data</code></a>.</p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
-<pre><code class="language-c">
+<pre><code class="language-c">typedef struct ExecutionData {
+    unsigned short number_of_shots;
+    unsigned short shot_length;
+    struct DataType data;
+} ExecutionData;
 
+typedef struct DataType {
+    DataType_Tag tag;
+    union {
+        struct {
+            char **byte;
+        };
+        struct {
+            double **real;
+        };
+    };
+} DataType;
 
-
-
+typedef enum DataType_Tag {
+    DataType_Byte,
+    DataType_Real,
+} DataType_Tag;
 </code></pre>
 <h2 id="safety"><a class="header" href="#safety">Safety</a></h2>
 <p>The memory for any <code>ExecutionData</code> will be freed when calling <a href="free_execution_result.html"><code>free_execution_result</code></a> for the corresponding <a href="execution_result.html"><code>ExecutionResult</code></a>. <strong>Make sure not to free the <a href="execution_result.html"><code>ExecutionResult</code></a> until after you're done with the data</strong>.</p>
