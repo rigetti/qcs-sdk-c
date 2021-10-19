@@ -1,0 +1,33 @@
+# This is a configuration file for Semantic Release. For more details, see
+# https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md
+
+plugins:
+  - - '@semantic-release/commit-analyzer'
+    - preset: eslint
+      releaseRules:
+        - tag: Breaking
+          release: minor
+        - tag: Update
+          release: patch
+        - tag: Upgrade
+          release: patch
+        - tag: New
+          release: patch
+
+  - - '@semantic-release/release-notes-generator'
+    - preset: eslint
+
+  - - '@semantic-release/exec'
+    - prepareCmd: "semantic-release-rust prepare ${nextRelease.version}"
+
+  - - '@semantic-release/changelog'
+    - changelogFile: CHANGELOG.md
+
+  - - '@semantic-release/github'
+    - assets:
+        - path: libqcs.h
+          label: Header File
+
+  - - '@semantic-release/git'
+    - assets: [ Cargo.toml, Cargo.lock, CHANGELOG.md ]
+      message: 'Chore: Release ${nextRelease.version} [skip ci]'
