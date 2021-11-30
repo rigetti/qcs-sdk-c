@@ -40,11 +40,11 @@ use std::collections::HashMap;
 pub unsafe extern "C" fn execute_on_qpu(
     executable: *mut Executable,
     qpu_id: *mut c_char,
-) -> ExecutionResult {
-    match _execute_on_qpu(executable, qpu_id) {
+) -> *const ExecutionResult {
+    Box::into_raw(Box::new(match _execute_on_qpu(executable, qpu_id) {
         Ok(data) => ExecutionResult::from_data(data),
         Err(error) => ExecutionResult::from(error),
-    }
+    }))
 }
 
 /// Implements the actual logic of [`execute_on_qpu`] but with `?` support.
