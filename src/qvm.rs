@@ -27,11 +27,11 @@ use std::collections::HashMap;
 ///
 /// This program will return a [`crate::ExecutionResult::Error`] if an error occurs.
 #[no_mangle]
-pub unsafe extern "C" fn execute_on_qvm(executable: *mut Executable) -> ExecutionResult {
-    match _execute_on_qvm(executable) {
+pub unsafe extern "C" fn execute_on_qvm(executable: *mut Executable) -> *const ExecutionResult {
+    Box::into_raw(Box::new(match _execute_on_qvm(executable) {
         Ok(data) => ExecutionResult::from_data(data),
         Err(error) => ExecutionResult::from(error),
-    }
+    }))
 }
 
 /// Implements the actual logic of [`execute_on_qvm`] but with `?` support.

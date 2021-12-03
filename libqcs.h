@@ -142,7 +142,7 @@ const struct ExecutionResult *execute_on_qpu(struct Executable *executable, char
  *
  * This program will return a [`crate::ExecutionResult::Error`] if an error occurs.
  */
-struct ExecutionResult execute_on_qvm(struct Executable *executable);
+const struct ExecutionResult *execute_on_qvm(struct Executable *executable);
 
 /**
  * Free an [`Executable`]
@@ -160,7 +160,7 @@ void free_executable(struct Executable *executable);
  * # Safety
  * This function should only be called with the result of one of the above functions.
  */
-void free_execution_result(struct ExecutionResult result);
+void free_execution_result(struct ExecutionResult *result);
 
 /**
  * Return a pointer to the [`ExecutionResult`] for a specific register or null if the register is not found.
