@@ -25,7 +25,7 @@ bool fail(
     printf("❌ %s failed: %s\n", testName, message);
     free_executable(exe);
     if (executionResult != NULL) {
-        free_execution_result(*executionResult);
+        free_execution_result(executionResult);
     }
 
     return false;
@@ -36,7 +36,7 @@ bool succeed(const char *testName, Executable *exe, ExecutionResult *executionRe
     // ANCHOR: free
     free_executable(exe);
     if (executionResult != NULL) {
-        free_execution_result(*executionResult);
+        free_execution_result(executionResult);
     }
     // ANCHOR_END: free
     return true;
@@ -49,28 +49,28 @@ bool test_bell_state() {
     unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
     // ANCHOR_END: run
 
     // ANCHOR: errors
-    if (result.tag == ExecutionResult_Error) {
+    if (result->tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result->error,
                 exe,
-                &result
+                result
         );
     }
     // ANCHOR_END: errors
 
     //ANCHOR: get_data
-    const ExecutionData *ro = get_data(result.handle, "ro");
+    const ExecutionData *ro = get_data(result->handle, "ro");
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
                 "ro register was not in result",
                 exe,
-                &result
+                result
         );
     }
     // ANCHOR_END: get_data
@@ -83,7 +83,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &result
+                result
         );
     }
     // ANCHOR_END: byte_check
@@ -95,7 +95,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &result
+                result
         );
     }
 
@@ -106,7 +106,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &result
+                result
         );
     }
 
@@ -128,13 +128,13 @@ bool test_bell_state() {
                     TEST_NAME,
                     message,
                     exe,
-                    &result
+                    result
             );
         }
     }
     // ANCHOR_END: results
 
-    return succeed(TEST_NAME, exe, &result);
+    return succeed(TEST_NAME, exe, result);
 }
 // ANCHOR_END: all
 
@@ -144,18 +144,18 @@ bool test_error() {
     const char *TEST_NAME = "test_error";
 
     Executable *exe = executable_from_quil(PROGRAM_WITHOUT_MEASUREMENT);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag != ExecutionResult_Error) {
+    if (result->tag != ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
                 "did not receive error result.",
                 exe,
-                &result
+                result
         );
     }
 
-    return succeed(TEST_NAME, exe, &result);
+    return succeed(TEST_NAME, exe, result);
 }
 
 // ANCHOR: test_real_data
@@ -174,21 +174,21 @@ bool test_real_data_type() {
     Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, "first");
     read_from(exe, "second");
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
     // ANCHOR_END: read_from
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result->tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result->error,
                 exe,
-                &result
+                result
         );
     }
 
     // ANCHOR: get_multiple
-    const ExecutionData *first = get_data(result.handle, "first");
-    const ExecutionData *second = get_data(result.handle, "second");
+    const ExecutionData *first = get_data(result->handle, "first");
+    const ExecutionData *second = get_data(result->handle, "second");
     // ANCHOR_END: get_multiple
 
     if (first == NULL || first->data.tag != DataType_Real) {
@@ -196,7 +196,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 "first register did not contain real data",
                 exe,
-                &result
+                result
         );
     }
     if (second == NULL || second->data.tag != DataType_Byte) {
@@ -204,7 +204,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 "second register did not contain byte data",
                 exe,
-                &result
+                result
         );
     }
 
@@ -219,7 +219,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &result
+                result
         );
     }
     if (second->data.byte[0][0] != 2) {
@@ -233,11 +233,11 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &result
+                result
         );
     }
 
-    return succeed(TEST_NAME, exe, &result);
+    return succeed(TEST_NAME, exe, result);
 }
 // ANCHOR_END: test_real_data
 
@@ -246,45 +246,45 @@ bool test_read_from_nonexistent_register() {
 
     Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, "nonexistent");
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag != ExecutionResult_Error) {
+    if (result->tag != ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
                 "expected an error but did not receive one",
                 exe,
-                &result
+                result
         );
     }
-    return succeed(TEST_NAME, exe, &result);
+    return succeed(TEST_NAME, exe, result);
 }
 
 bool test_get_data_from_nonexistent_register() {
     const char *TEST_NAME = "test_get_data_from_nonexistent_register";
     Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, "first");
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result->tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result->error,
                 exe,
-                &result
+                result
         );
     }
 
-    const ExecutionData *nonexistent = get_data(result.handle, "nonexistent");
+    const ExecutionData *nonexistent = get_data(result->handle, "nonexistent");
 
     if (nonexistent != NULL) {
         return fail(
                 TEST_NAME,
                 "expected NULL when reading a register that doesn't exist",
                 exe,
-                &result
+                result
         );
     }
-    return succeed(TEST_NAME, exe, &result);
+    return succeed(TEST_NAME, exe, result);
 }
 
 // ANCHOR: parametrization
@@ -314,18 +314,18 @@ bool test_parametrization() {
         theta = step * step_size;
         set_param(exe, "theta", 0, theta);
 
-        ExecutionResult result = execute_on_qvm(exe);
+        ExecutionResult *result = execute_on_qvm(exe);
     // ANCHOR_END: set_param
 
-        if (result.tag == ExecutionResult_Error) {
+        if (result->tag == ExecutionResult_Error) {
             return fail(
                     TEST_NAME,
-                    result.error,
+                    result->error,
                     exe,
-                    &result
+                    result
             );
         }
-        const ExecutionData *ro = get_data(result.handle, "ro");
+        const ExecutionData *ro = get_data(result->handle, "ro");
         found_one |= ro->data.byte[0][0];
         // Free intermediate results
         // ANCHOR: free_execution_result
@@ -346,16 +346,16 @@ bool test_param_does_not_exist() {
 
     Executable *exe = executable_from_quil(PARAMETRIZED_PROGRAM);
     set_param(exe, "doesnt_exist", 0, 0.0);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result->tag == ExecutionResult_Error) {
         return succeed(
                 TEST_NAME,
                 exe,
-                &result
+                result
         );
     } else {
-        return fail(TEST_NAME, "Expected an error, got none", exe, &result);
+        return fail(TEST_NAME, "Expected an error, got none", exe, result);
     }
 }
 
@@ -364,15 +364,15 @@ bool test_param_wrong_size() {
 
     Executable *exe = executable_from_quil(PARAMETRIZED_PROGRAM);
     set_param(exe, "theta", 1, 0.0);
-    ExecutionResult result = execute_on_qvm(exe);
-    if (result.tag == ExecutionResult_Error) {
+    ExecutionResult *result = execute_on_qvm(exe);
+    if (result->tag == ExecutionResult_Error) {
         return succeed(
                 TEST_NAME,
                 exe,
-                &result
+                result
         );
     } else {
-        return fail(TEST_NAME, "Expected an error, got none", exe, &result);
+        return fail(TEST_NAME, "Expected an error, got none", exe, result);
     }
 }
 
