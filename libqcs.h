@@ -132,7 +132,7 @@ struct Executable *executable_from_quil(char *quil);
  * This program will return a [`crate::ExecutionResult::Error`] if an error occurs.
  */
 // ANCHOR: execute_on_qpu
-const struct ExecutionResult *execute_on_qpu(struct Executable *executable, char *qpu_id);
+struct ExecutionResult *execute_on_qpu(struct Executable *executable, char *qpu_id);
 // ANCHOR_END: execute_on_qpu
 
 /**
@@ -161,7 +161,7 @@ const struct ExecutionResult *execute_on_qpu(struct Executable *executable, char
  * This program will return a [`crate::ExecutionResult::Error`] if an error occurs.
  */
 // ANCHOR: execute_on_qvm
-const struct ExecutionResult *execute_on_qvm(struct Executable *executable);
+struct ExecutionResult *execute_on_qvm(struct Executable *executable);
 // ANCHOR_END: execute_on_qvm
 
 /**
