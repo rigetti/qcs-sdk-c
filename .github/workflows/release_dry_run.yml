@@ -1,13 +1,10 @@
-name: Release
+name: Release Dry-Run
 
-on:
-  push:
-    branches:
-      - main
+on: pull_request
 
 jobs:
   release:
-    name: Semantic Release
+    name: Semantic Release Dry Run
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +30,7 @@ jobs:
         id: semantic
         with:
           semantic_version: 18
+          dry_run: true
           branches: |
             [
               'main'
