@@ -162,7 +162,8 @@ pub unsafe extern "C" fn read_from(executable: *mut Executable, name: *mut c_cha
 /// # Safety
 /// This function should only be called with the result of one of the above functions.
 #[no_mangle]
-pub unsafe extern "C" fn free_execution_result(result: ExecutionResult) {
+pub unsafe extern "C" fn free_execution_result(result: *mut ExecutionResult) {
+    let result = Box::from_raw(result);
     let rust_managed = result.into_rust();
     drop(rust_managed);
 }
