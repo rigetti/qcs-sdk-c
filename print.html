@@ -232,32 +232,32 @@
 <pre><code class="language-c">    unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <p>If we want to run on a real QPU, we swap out the function and add a parameter specifying which QPU to run against:</p>
 <pre><code class="language-c">    ExecutionResult result = execute_on_qpu(exe, &quot;Aspen-9&quot;);
 </code></pre>
 <h3 id="step-4-handle-errors"><a class="header" href="#step-4-handle-errors">Step 4: Handle Errors</a></h3>
 <p>If something goes wrong, <a href="api/execution_result.html"><code>ExecutionResult</code></a> will be the <a href="api/execution_result.html#error"><code>Error</code></a> variant. This field contains a human-readable description of the error.</p>
-<pre><code class="language-c">    if (result.tag == ExecutionResult_Error) {
+<pre><code class="language-c">    if (result-&gt;tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result-&gt;error,
                 exe,
-                &amp;result
+                result
         );
     }
 </code></pre>
 <p>For the sake of our test cases, we have defined a function called <code>fail</code> which frees the memory of <code>result</code> and <code>exe</code> for us. <strong>Make sure to always free all <a href="api/execution_result.html"><code>ExecutionResult</code></a>s using <a href="api/free_execution_result.html"><code>free_execution_result</code></a> and any <a href="api/executable.html"><code>Executable</code></a> using <a href="api/free_executable.html"><code>free_executable</code></a></strong>. </p>
 <h3 id="step-5-process-results"><a class="header" href="#step-5-process-results">Step 5: Process Results</a></h3>
 <p>If there were no errors, then you can safely read your results out of the requested registers using <a href="api/get_data.html"><code>get_data</code></a> which returns an <a href="api/execution_data.html"><code>ExecutionData</code></a>! In this case, we know a successful response will be a <a href="api/execution_result.html#byte"><code>Byte</code></a> variant since we read out of <code>BIT</code> memory.</p>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result.handle, &quot;ro&quot;);
+<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
                 &quot;ro register was not in result&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
     if (ro-&gt;data.tag != DataType_Byte) {
@@ -267,7 +267,7 @@
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
     for (int shot = 0; shot &lt; ro-&gt;number_of_shots; shot++) {
@@ -287,7 +287,7 @@
                     TEST_NAME,
                     message,
                     exe,
-                    &amp;result
+                    result
             );
         }
     }
@@ -300,7 +300,7 @@
 <p>You must call <a href="api/free_executable.html"><code>free_executable</code></a> and <a href="api/free_execution_result.html"><code>free_execution_result</code></a> to deallocate <a href="api/executable.html"><code>Executable</code></a> and <a href="api/execution_result.html"><code>ExecutionResult</code></a> safely:</p>
 <pre><code class="language-c">    free_executable(exe);
     if (executionResult != NULL) {
-        free_execution_result(*executionResult);
+        free_execution_result(executionResult);
     }
 </code></pre>
 <h3 id="all-together"><a class="header" href="#all-together">All Together</a></h3>
@@ -327,7 +327,7 @@ bool fail(
     printf(&quot;❌ %s failed: %s\n&quot;, testName, message);
     free_executable(exe);
     if (executionResult != NULL) {
-        free_execution_result(*executionResult);
+        free_execution_result(executionResult);
     }
 
     return false;
@@ -337,7 +337,7 @@ bool succeed(const char *testName, Executable *exe, ExecutionResult *executionRe
     printf(&quot;✅ %s succeeded.\n&quot;, testName);
     free_executable(exe);
     if (executionResult != NULL) {
-        free_execution_result(*executionResult);
+        free_execution_result(executionResult);
     }
     return true;
 }
@@ -348,24 +348,24 @@ bool test_bell_state() {
     unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result-&gt;tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result-&gt;error,
                 exe,
-                &amp;result
+                result
         );
     }
 
-    const ExecutionData *ro = get_data(result.handle, &quot;ro&quot;);
+    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
                 &quot;ro register was not in result&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -376,7 +376,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -387,7 +387,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -398,7 +398,7 @@ bool test_bell_state() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -419,12 +419,12 @@ bool test_bell_state() {
                     TEST_NAME,
                     message,
                     exe,
-                    &amp;result
+                    result
             );
         }
     }
 
-    return succeed(TEST_NAME, exe, &amp;result);
+    return succeed(TEST_NAME, exe, result);
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="executable_from_quil"><a class="header" href="#executable_from_quil"><code>executable_from_quil</code></a></h1>
@@ -471,7 +471,7 @@ bool test_bell_state() {
 <pre><code class="language-C">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="set_param"><a class="header" href="#set_param">set_param</a></h1>
 <p>Set the value of a parameter on an <a href="api/executable.html"><code>Executable</code></a> for parametric execution.</p>
@@ -510,7 +510,7 @@ bool test_bell_state() {
         theta = step * step_size;
         set_param(exe, &quot;theta&quot;, 0, theta);
 
-        ExecutionResult result = execute_on_qvm(exe);
+        ExecutionResult *result = execute_on_qvm(exe);
         
         // Do things with result...
 
@@ -549,13 +549,13 @@ bool test_bell_state() {
 <pre><code class="language-C">    unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <p>Then the program will be executed 3 times (per the number of shots set). The resulting <a href="api/execution_result.html#byte"><code>Byte</code></a> data of one execution will be a 2D array with an outer dimension of 3 (number of shots) and an inner dimension of 2 (amount of memory locations read per run). </p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="execute_on_qvm"><a class="header" href="#execute_on_qvm"><code>execute_on_qvm</code></a></h1>
 <p>Run an <a href="api/executable.html"><code>Executable</code></a> against a locally-running simulator.</p>
 <h2 id="definition-5"><a class="header" href="#definition-5">Definition</a></h2>
-<pre><code class="language-c">struct ExecutionResult execute_on_qvm(struct Executable *executable);
+<pre><code class="language-c">struct ExecutionResult *execute_on_qvm(struct Executable *executable);
 </code></pre>
 <h2 id="safety-3"><a class="header" href="#safety-3">Safety</a></h2>
 <ol>
@@ -577,7 +577,7 @@ bool test_bell_state() {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="execute_on_qpu"><a class="header" href="#execute_on_qpu"><code>execute_on_qpu</code></a></h1>
 <p>Execute an <a href="api/executable.html"><code>Executable</code></a> on a specified QPU.</p>
 <h2 id="definition-6"><a class="header" href="#definition-6">Definition</a></h2>
-<pre><code class="language-c">struct ExecutionResult execute_on_qpu(struct Executable *executable, char *qpu_id);
+<pre><code class="language-c">struct ExecutionResult *execute_on_qpu(struct Executable *executable, char *qpu_id);
 </code></pre>
 <h2 id="safety-4"><a class="header" href="#safety-4">Safety</a></h2>
 <ol>
@@ -634,27 +634,27 @@ bool test_bell_state() {
 <pre><code class="language-c">    unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result-&gt;tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result-&gt;error,
                 exe,
-                &amp;result
+                result
         );
     }
 </code></pre>
 <h3 id="handle"><a class="header" href="#handle"><code>Handle</code></a></h3>
 <p>If there is not an error, <code>tag</code> will instead be <code>ExecutionResult_Handle</code>. The <code>handle</code> attribute is a pointer to a <a href="api/result_handle.html"><code>ResultHandle</code></a> which can be used with <a href="api/get_data.html"><code>get_data</code></a>.</p>
 <h4 id="handle-example"><a class="header" href="#handle-example"><code>Handle</code> Example</a></h4>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result.handle, &quot;ro&quot;);
+<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
                 &quot;ro register was not in result&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
 </code></pre>
@@ -681,10 +681,10 @@ bool test_bell_state() {
 <pre><code class="language-c">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    const ExecutionData *first = get_data(result.handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result.handle, &quot;second&quot;);
+    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
+    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="executiondata"><a class="header" href="#executiondata">ExecutionData</a></h1>
 <p><code>ExecutionData</code> contains the actual results of an execution, you get a pointer to one by calling <a href="api/get_data.html"><code>get_data</code></a>.</p>
@@ -740,26 +740,26 @@ bool test_real_data_type() {
     Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result-&gt;tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result-&gt;error,
                 exe,
-                &amp;result
+                result
         );
     }
 
-    const ExecutionData *first = get_data(result.handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result.handle, &quot;second&quot;);
+    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
+    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
 
     if (first == NULL || first-&gt;data.tag != DataType_Real) {
         return fail(
                 TEST_NAME,
                 &quot;first register did not contain real data&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
     if (second == NULL || second-&gt;data.tag != DataType_Byte) {
@@ -767,7 +767,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 &quot;second register did not contain byte data&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -782,7 +782,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
     if (second-&gt;data.byte[0][0] != 2) {
@@ -796,11 +796,11 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
 
-    return succeed(TEST_NAME, exe, &amp;result);
+    return succeed(TEST_NAME, exe, result);
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="free_execution_result"><a class="header" href="#free_execution_result"><code>free_execution_result</code></a></h1>
@@ -808,7 +808,7 @@ bool test_real_data_type() {
 <h2 id="safety-8"><a class="header" href="#safety-8">Safety</a></h2>
 <p><strong>Only call this function with the result of <a href="api/execute_on_qpu.html"><code>execute_on_qpu</code></a> or <a href="api/execute_on_qvm.html"><code>execute_on_qvm</code></a> as it expects memory that was originally allocated by Rust.</strong></p>
 <h2 id="definition-11"><a class="header" href="#definition-11">Definition</a></h2>
-<pre><code class="language-c">void free_execution_result(struct ExecutionResult result);
+<pre><code class="language-c">void free_execution_result(struct ExecutionResult *result);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="free_executable"><a class="header" href="#free_executable"><code>free_executable</code></a></h1>
 <p><code>free_executable</code> is a memory deallocation function which must be called for any <a href="api/executable.html"><code>Executable</code></a> to avoid leakage.</p>

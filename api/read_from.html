@@ -169,7 +169,7 @@
 <pre><code class="language-C">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 
                     </main>

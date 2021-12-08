@@ -160,10 +160,10 @@
 <pre><code class="language-c">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    const ExecutionData *first = get_data(result.handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result.handle, &quot;second&quot;);
+    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
+    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
 </code></pre>
 
                     </main>

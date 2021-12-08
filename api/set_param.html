@@ -179,7 +179,7 @@
         theta = step * step_size;
         set_param(exe, &quot;theta&quot;, 0, theta);
 
-        ExecutionResult result = execute_on_qvm(exe);
+        ExecutionResult *result = execute_on_qvm(exe);
         
         // Do things with result...
 

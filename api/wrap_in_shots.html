@@ -169,7 +169,7 @@
 <pre><code class="language-C">    unsigned int shots = 3;
     Executable *exe = executable_from_quil(BELL_STATE_PROGRAM);
     wrap_in_shots(exe, shots);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <p>Then the program will be executed 3 times (per the number of shots set). The resulting <a href="execution_result.html#byte"><code>Byte</code></a> data of one execution will be a 2D array with an outer dimension of 3 (number of shots) and an inner dimension of 2 (amount of memory locations read per run). </p>
 

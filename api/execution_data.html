@@ -196,26 +196,26 @@ bool test_real_data_type() {
     Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
-    ExecutionResult result = execute_on_qvm(exe);
+    ExecutionResult *result = execute_on_qvm(exe);
 
-    if (result.tag == ExecutionResult_Error) {
+    if (result-&gt;tag == ExecutionResult_Error) {
         return fail(
                 TEST_NAME,
-                result.error,
+                result-&gt;error,
                 exe,
-                &amp;result
+                result
         );
     }
 
-    const ExecutionData *first = get_data(result.handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result.handle, &quot;second&quot;);
+    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
+    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
 
     if (first == NULL || first-&gt;data.tag != DataType_Real) {
         return fail(
                 TEST_NAME,
                 &quot;first register did not contain real data&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
     if (second == NULL || second-&gt;data.tag != DataType_Byte) {
@@ -223,7 +223,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 &quot;second register did not contain byte data&quot;,
                 exe,
-                &amp;result
+                result
         );
     }
 
@@ -238,7 +238,7 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
     if (second-&gt;data.byte[0][0] != 2) {
@@ -252,11 +252,11 @@ bool test_real_data_type() {
                 TEST_NAME,
                 message,
                 exe,
-                &amp;result
+                result
         );
     }
 
-    return succeed(TEST_NAME, exe, &amp;result);
+    return succeed(TEST_NAME, exe, result);
 }
 </code></pre>
 
