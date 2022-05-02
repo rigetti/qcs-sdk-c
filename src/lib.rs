@@ -267,7 +267,7 @@ impl ExecutionData {
             qcs::ExecutionResult::I8(data) => Some(ExecutionData::from(data)),
             qcs::ExecutionResult::I16(data) => Some(ExecutionData::from(data)),
             qcs::ExecutionResult::F64(data) => Some(ExecutionData::from(data)),
-            _ => None,
+            qcs::ExecutionResult::Complex32(_) => None,
         }
     }
 
