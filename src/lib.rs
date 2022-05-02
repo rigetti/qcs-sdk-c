@@ -359,7 +359,7 @@ impl From<Vec<Vec<i16>>> for ExecutionData {
         // TODO: consider different `DataType` variant here, rather than re-use of smaller `Byte`
         #[allow(clippy::cast_possible_truncation)]
         Self {
-            data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr() as *mut *mut c_char),
+            data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr().cast::<*mut i8>()),
             number_of_shots,
             shot_length,
         }
