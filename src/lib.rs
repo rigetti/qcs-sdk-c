@@ -356,7 +356,6 @@ impl From<Vec<Vec<i16>>> for ExecutionData {
             })
             .collect();
 
-        // TODO: consider different `DataType` variant here, rather than re-use of smaller `Byte`
         #[allow(clippy::cast_possible_truncation)]
         Self {
             data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr().cast::<*mut i8>()),
