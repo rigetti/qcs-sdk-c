@@ -1,3 +1,18 @@
+## [0.1.1](https://github.com/rigetti/qcs-sdk-c/compare/v0.1.0...v0.1.1) (2022-05-03)
+
+
+### Chore
+
+* auto update Cargo.lock ([b8f590a](https://github.com/rigetti/qcs-sdk-c/commit/b8f590a9248d929bc9a677f84d4961bee6733cac))
+* explicitly use only remaining variant in match arm ([e598bb6](https://github.com/rigetti/qcs-sdk-c/commit/e598bb61a2499ba2f3c22366549267ef563ebc96))
+* remove todo, open issue tracking type size (#12) ([935cc11](https://github.com/rigetti/qcs-sdk-c/commit/935cc1138fd1e40c09d0ad417f24f1745eb11ca5)), closes [#12](https://github.com/rigetti/qcs-sdk-c/issues/12)
+* use cast method as per clippy remarks ([aedb07e](https://github.com/rigetti/qcs-sdk-c/commit/aedb07ebf761ea503a7842fb7563801613ac3391))
+
+### Fix
+
+* support ExecutionResult::I16 variant thru re-use of Byte ([6cc5a26](https://github.com/rigetti/qcs-sdk-c/commit/6cc5a26e23561c088e2b8c1b00fec9a52888d6fc))
+* support ExecutionResult::I16 variant thru re-use of Byte (#11) ([b3c553c](https://github.com/rigetti/qcs-sdk-c/commit/b3c553c8480890c77ea72dc50cf90406c0785e91)), closes [#11](https://github.com/rigetti/qcs-sdk-c/issues/11)
+
 # [0.1.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.0.1...v0.1.0) (2021-12-08)
 
 
