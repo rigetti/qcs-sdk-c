@@ -265,8 +265,9 @@ impl ExecutionData {
     fn from_rust(data: qcs::ExecutionResult) -> Option<Self> {
         match data {
             qcs::ExecutionResult::I8(data) => Some(ExecutionData::from(data)),
+            qcs::ExecutionResult::I16(data) => Some(ExecutionData::from(data)),
             qcs::ExecutionResult::F64(data) => Some(ExecutionData::from(data)),
-            _ => None,
+            qcs::ExecutionResult::Complex32(_) => None,
         }
     }
 
@@ -332,6 +333,32 @@ impl From<Vec<Vec<i8>>> for ExecutionData {
         #[allow(clippy::cast_possible_truncation)]
         Self {
             data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr()),
+            number_of_shots,
+            shot_length,
+        }
+    }
+}
+
+impl From<Vec<Vec<i16>>> for ExecutionData {
+    fn from(data: Vec<Vec<i16>>) -> Self {
+        // Shots was passed into QVM originally as a u16 so this is safe.
+        #[allow(clippy::cast_possible_truncation)]
+        let number_of_shots = data.len() as u16;
+
+        // This one is a guess. If more than 2^16 slots in a register then this will truncate
+        #[allow(clippy::cast_possible_truncation)]
+        let shot_length = data[0].len() as u16;
+
+        let results: Vec<*mut i16> = IntoIterator::into_iter(data)
+            .map(|mut shot| {
+                shot.shrink_to_fit();
+                ManuallyDrop::new(shot).as_mut_ptr()
+            })
+            .collect();
+
+        #[allow(clippy::cast_possible_truncation)]
+        Self {
+            data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr().cast::<*mut i8>()),
             number_of_shots,
             shot_length,
         }
