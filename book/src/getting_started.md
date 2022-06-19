@@ -33,10 +33,12 @@ graph TD
         execute_on_qpu --> ExecutionResult
         click ExecutionResult "/api/execution_result.html"
         ExecutionResult --> check_for_errors((Check for Errors))
-        --> get_data{{get_data}}
         --> ExecutionData
+        --> get_data{{get_data}}
+        --> RegisterData
         click get_data "/api/get_data.html"
         click ExecutionData "/api/execution_data.html"
+        click RegisterData "/api/register_data.html"
         ExecutionResult --When done with all data--> free_program_result{{free_execution_result}}
         click free_program_result "/api/free_execution_result.html"
         
@@ -85,7 +87,7 @@ Here we create an [`Executable`] using [`executable_from_quil`], then wrap it in
 If we want to run on a real QPU, we swap out the function and add a parameter specifying which QPU to run against:
 
 ```c
-    ExecutionResult result = execute_on_qpu(exe, "Aspen-9");
+    ExecutionResult result = execute_on_qpu(exe, "Aspen-11");
 ```
 
 ### Step 4: Handle Errors
@@ -100,7 +102,7 @@ For the sake of our test cases, we have defined a function called `fail` which f
 
 ### Step 5: Process Results
 
-If there were no errors, then you can safely read your results out of the requested registers using [`get_data`] which returns an [`ExecutionData`]! In this case, we know a successful response will be a [`Byte`] variant since we read out of `BIT` memory.
+If there were no errors, then you can safely read your results out of the requested registers using [`get_data`] which returns a [`RegisterData`]! In this case, we know a successful response will be a [`Byte`] variant since we read out of `BIT` memory.
 
 ```c
 {{#include ../../tests/integration_tests.c:get_data}}
@@ -147,4 +149,4 @@ Here's what the full integration test looks like from our test suite:
 [`execute_on_qpu`]: api/execute_on_qpu.md
 [`free_executable`]: api/free_executable.md
 [`get_data`]: api/get_data.md
-[`ExecutionData`]: api/execution_data.md
+[`RegisterData`]: api/register_data.md

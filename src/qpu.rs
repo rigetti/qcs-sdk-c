@@ -1,10 +1,9 @@
 use std::ffi::CStr;
-
-use eyre::{Result, WrapErr};
 use std::os::raw::c_char;
 
+use eyre::{Result, WrapErr};
+
 use crate::{Executable, ExecutionResult};
-use std::collections::HashMap;
 
 /// Run an executable (created by [`crate::executable_from_quil`]) on a real QPU.
 ///
@@ -41,10 +40,7 @@ pub unsafe extern "C" fn execute_on_qpu(
     executable: *mut Executable,
     qpu_id: *mut c_char,
 ) -> *mut ExecutionResult {
-    let execution_result = match _execute_on_qpu(executable, qpu_id) {
-        Ok(data) => ExecutionResult::from_data(data),
-        Err(error) => ExecutionResult::from(error),
-    };
+    let execution_result = ExecutionResult::from(_execute_on_qpu(executable, qpu_id));
     Box::into_raw(Box::new(execution_result))
 }
 
@@ -52,7 +48,7 @@ pub unsafe extern "C" fn execute_on_qpu(
 unsafe fn _execute_on_qpu(
     executable: *mut Executable,
     qpu_id: *mut c_char,
-) -> Result<HashMap<Box<str>, qcs::ExecutionResult>, String> {
+) -> Result<qcs::ExecutionData, String> {
     // SAFETY: If qpu_id is not a valid null-terminated string, this is UB
     let qpu_id = CStr::from_ptr(qpu_id);
     let qpu_id = qpu_id
