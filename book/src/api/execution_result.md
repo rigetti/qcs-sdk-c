@@ -6,7 +6,7 @@ An `ExecutionResult` is the struct you receive from a call to either [`execute_o
 
 **You must pass this struct to [`free_execution_result`] when you're done with it to avoid leaking the memory.**
 
-**Any [`ExecutionData`] which was retrieved from this result will be freed when this is called.**
+**Any [`RegisterData`] which was retrieved from this result will be freed when this is called.**
 
 
 ## Definition
@@ -23,8 +23,7 @@ There are multiple variants of `ExecutionResult`. The `tag` attribute determines
 {{#include ../../../libqcs.h:ExecutionResult_Tag}}
 ```
 
-The [`Error`] variant indicates that execution failed. The [`Handle`] variant is populated in the case of a successful run, and provides access to a [`ResultHandle`].
-
+The [`Error`] variant indicates that execution failed. The [`Success`] variant is populated in the case of a successful run, and contains an [`ExecutionData`].
 
 ### `Error`
 
@@ -40,9 +39,9 @@ Here, `result.error` is that string:
 {{#include ../../../tests/integration_tests.c:errors}}
 ```
 
-### `Handle`
+### `Success`
 
-If there is not an error, `tag` will instead be `ExecutionResult_Handle`. The `handle` attribute is a pointer to a [`ResultHandle`] which can be used with [`get_data`].
+If there is not an error, `tag` will instead be `ExecutionResult_Success`. The `success` attribute is an [`ExecutionData`].
 
 #### `Handle` Example
 
@@ -55,9 +54,10 @@ If there is not an error, `tag` will instead be `ExecutionResult_Handle`. The `h
 [`execute_on_qpu`]: execute_on_qpu.md
 [`free_execution_result`]: free_execution_result.md
 [`Error`]: #error
-[`Handle`]: #handle
+[`Success`]: #success
 [`wrap_in_shots`]: wrap_in_shots.md
 [`read_from`]: read_from.md
 [`ResultHandle`]: result_handle.md
 [`get_data`]: get_data.md
+[`RegisterData`]: register_data.md
 [`ExecutionData`]: execution_data.md

@@ -1,3 +1,13 @@
+## [0.2.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.1.1...v0.2.0) (2022-06-18)
+
+### Breaking Changes
+
+Many interfaces have changed to align with the changes in `qcs-sdk-rust`.
+
+1. The `Handle` variant of `ExecutionResult` has been renamed `Success` and is of a new type called `ExecutionData`.
+2. The `ResultHandle` used with `get_data` is now the `handle` attribute on the new `ExecutionData` type. You can rename a line that was `result->handle` to `result->success.handle` to maintain the same behavior.
+3. The old `ExecutionData` type has been renamed to `RegisterData`.
+
 ## [0.1.1](https://github.com/rigetti/qcs-sdk-c/compare/v0.1.0...v0.1.1) (2022-05-03)
 
 
@@ -13,7 +23,7 @@
 * support ExecutionResult::I16 variant thru re-use of Byte ([6cc5a26](https://github.com/rigetti/qcs-sdk-c/commit/6cc5a26e23561c088e2b8c1b00fec9a52888d6fc))
 * support ExecutionResult::I16 variant thru re-use of Byte (#11) ([b3c553c](https://github.com/rigetti/qcs-sdk-c/commit/b3c553c8480890c77ea72dc50cf90406c0785e91)), closes [#11](https://github.com/rigetti/qcs-sdk-c/issues/11)
 
-# [0.1.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.0.1...v0.1.0) (2021-12-08)
+## [0.1.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.0.1...v0.1.0) (2021-12-08)
 
 
 ### Breaking

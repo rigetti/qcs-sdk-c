@@ -3,16 +3,19 @@
 // C doesn't have namespaces, so exported functions should contain the module name
 #![allow(clippy::module_name_repetitions)]
 
+extern crate core;
+
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
+use std::mem::ManuallyDrop;
+use std::os::raw::{c_char, c_double, c_uint, c_ulong, c_ushort};
+use std::ptr::null;
+use std::time::Duration;
 
 use eyre::{eyre, Result};
-use std::os::raw::{c_char, c_double, c_uint, c_ushort};
 
 pub use crate::qpu::execute_on_qpu;
 pub use crate::qvm::execute_on_qvm;
-use std::collections::HashMap;
-use std::mem::ManuallyDrop;
-use std::ptr::null;
 
 mod qpu;
 mod qvm;
@@ -170,12 +173,27 @@ pub unsafe extern "C" fn free_execution_result(result: *mut ExecutionResult) {
 
 #[repr(C)]
 pub enum ExecutionResult {
-    Handle(*mut ResultHandle),
+    Success(ExecutionData),
     Error(*mut c_char),
 }
 
+#[repr(C)]
+pub struct ExecutionData {
+    pub execution_duration_microseconds: c_ulong,
+    pub handle: *mut ResultHandle,
+}
+
+impl From<qcs::ExecutionData> for ExecutionData {
+    fn from(data: qcs::ExecutionData) -> Self {
+        ExecutionData {
+            execution_duration_microseconds: data.duration.unwrap_or_default().as_micros() as c_ulong,
+            handle: ResultHandle::from_data(data.registers),
+        }
+    }
+}
+
 impl ExecutionResult {
-    unsafe fn into_rust(self) -> Result<HashMap<Box<str>, qcs::ExecutionResult>> {
+    unsafe fn into_rust(self) -> Result<qcs::ExecutionData> {
         match self {
             Self::Error(error) => {
                 if error.is_null() {
@@ -187,12 +205,17 @@ impl ExecutionResult {
                 let c_string = CString::from_raw(error);
                 Err(eyre!(c_string.into_string()?))
             }
-            Self::Handle(handle) => Ok(Box::from_raw(handle).into_rust()),
+            Self::Success(ExecutionData { execution_duration_microseconds: billable_duration_microseconds, handle }) => Ok(qcs::ExecutionData {
+                duration: Some(Duration::from_micros(billable_duration_microseconds)),
+                registers: Box::from_raw(handle).into_rust(),
+            }),
         }
     }
+}
 
-    fn from_data(data: HashMap<Box<str>, qcs::ExecutionResult>) -> Self {
-        Self::Handle(ResultHandle::from_data(data))
+impl From<qcs::ExecutionData> for ExecutionResult {
+    fn from(data: qcs::ExecutionData) -> Self {
+        Self::Success(ExecutionData::from(data))
     }
 }
 
@@ -203,10 +226,19 @@ impl From<String> for ExecutionResult {
     }
 }
 
+impl From<Result<qcs::ExecutionData, String>> for ExecutionResult {
+    fn from(result: Result<qcs::ExecutionData, String>) -> Self {
+        match result {
+            Ok(data) => Self::Success(ExecutionData::from(data)),
+            Err(err) => Self::from(err),
+        }
+    }
+}
+
 /// The return value of [`execute_on_qvm`] or [`execute_on_qpu`].
 ///
 /// Holds result data internally, intentionally opaque to C since it uses a map internally
-pub struct ResultHandle(HashMap<Box<str>, ExecutionData>);
+pub struct ResultHandle(HashMap<Box<str>, RegisterData>);
 
 /// Return a pointer to the [`ExecutionResult`] for a specific register or null if the register is not found.
 ///
@@ -217,7 +249,7 @@ pub struct ResultHandle(HashMap<Box<str>, ExecutionData>);
 pub unsafe extern "C" fn get_data(
     handle: *const ResultHandle,
     name: *const c_char,
-) -> *const ExecutionData {
+) -> *const RegisterData {
     // SAFETY: If register is null or not nul-terminated, then bad things happen here.
     let register = match CStr::from_ptr(name).to_str() {
         Ok(register) => register,
@@ -225,21 +257,21 @@ pub unsafe extern "C" fn get_data(
     };
     // SAFETY: if handle is null or an invalid pointer than this is undefined behavior.
     match (*handle).0.get(register) {
-        Some(result) => result as *const ExecutionData,
+        Some(result) => result as *const RegisterData,
         None => null(),
     }
 }
 
 impl ResultHandle {
-    fn from_data(data: HashMap<Box<str>, qcs::ExecutionResult>) -> *mut Self {
+    fn from_data(data: HashMap<Box<str>, qcs::RegisterData>) -> *mut Self {
         let inner = data
             .into_iter()
-            .filter_map(|(key, data)| ExecutionData::from_rust(data).map(|c_data| (key, c_data)))
+            .filter_map(|(key, data)| RegisterData::from_rust(data).map(|c_data| (key, c_data)))
             .collect();
         Box::into_raw(Box::new(Self(inner)))
     }
 
-    unsafe fn into_rust(self) -> HashMap<Box<str>, qcs::ExecutionResult> {
+    unsafe fn into_rust(self) -> HashMap<Box<str>, qcs::RegisterData> {
         self.0
             .into_iter()
             .map(|(key, data)| (key, data.into_rust()))
@@ -249,7 +281,7 @@ impl ResultHandle {
 
 /// The contents of a single register within a [`ResultHandle`], fetched with [`get_data`]
 #[repr(C)]
-pub struct ExecutionData {
+pub struct RegisterData {
     number_of_shots: c_ushort,
     shot_length: c_ushort,
     data: DataType,
@@ -261,17 +293,17 @@ pub enum DataType {
     Real(*mut *mut c_double),
 }
 
-impl ExecutionData {
-    fn from_rust(data: qcs::ExecutionResult) -> Option<Self> {
+impl RegisterData {
+    fn from_rust(data: qcs::RegisterData) -> Option<Self> {
         match data {
-            qcs::ExecutionResult::I8(data) => Some(ExecutionData::from(data)),
-            qcs::ExecutionResult::I16(data) => Some(ExecutionData::from(data)),
-            qcs::ExecutionResult::F64(data) => Some(ExecutionData::from(data)),
-            qcs::ExecutionResult::Complex32(_) => None,
+            qcs::RegisterData::I8(data) => Some(RegisterData::from(data)),
+            qcs::RegisterData::I16(data) => Some(RegisterData::from(data)),
+            qcs::RegisterData::F64(data) => Some(RegisterData::from(data)),
+            qcs::RegisterData::Complex32(_) => None,
         }
     }
 
-    unsafe fn into_rust(self) -> qcs::ExecutionResult {
+    unsafe fn into_rust(self) -> qcs::RegisterData {
         let Self {
             number_of_shots,
             shot_length,
@@ -292,7 +324,7 @@ impl ExecutionData {
                     .map(|ptr| Vec::from_raw_parts(ptr, shot_length as usize, shot_length as usize))
                     .collect();
 
-                qcs::ExecutionResult::I8(results)
+                qcs::RegisterData::I8(results)
             }
             DataType::Real(data_per_shot) => {
                 // SAFETY: If any of these pieces are wrong, this will read arbitrary memory
@@ -308,13 +340,13 @@ impl ExecutionData {
                     .map(|ptr| Vec::from_raw_parts(ptr, shot_length as usize, shot_length as usize))
                     .collect();
 
-                qcs::ExecutionResult::F64(results)
+                qcs::RegisterData::F64(results)
             }
         }
     }
 }
 
-impl From<Vec<Vec<i8>>> for ExecutionData {
+impl From<Vec<Vec<i8>>> for RegisterData {
     fn from(data: Vec<Vec<i8>>) -> Self {
         // Shots was passed into QVM originally as a u16 so this is safe.
         #[allow(clippy::cast_possible_truncation)]
@@ -339,7 +371,7 @@ impl From<Vec<Vec<i8>>> for ExecutionData {
     }
 }
 
-impl From<Vec<Vec<i16>>> for ExecutionData {
+impl From<Vec<Vec<i16>>> for RegisterData {
     fn from(data: Vec<Vec<i16>>) -> Self {
         // Shots was passed into QVM originally as a u16 so this is safe.
         #[allow(clippy::cast_possible_truncation)]
@@ -365,7 +397,7 @@ impl From<Vec<Vec<i16>>> for ExecutionData {
     }
 }
 
-impl From<Vec<Vec<f64>>> for ExecutionData {
+impl From<Vec<Vec<f64>>> for RegisterData {
     fn from(mut data: Vec<Vec<f64>>) -> Self {
         // Shots was passed into QVM originally as a u16 so this is safe.
         #[allow(clippy::cast_possible_truncation)]

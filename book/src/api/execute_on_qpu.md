@@ -23,7 +23,7 @@ Valid settings and secrets must be set either in ~/.qcs or by setting the OS env
 ## Arguments
 
 1. `executable`: The [`Executable`] to execute.
-4. `qpu_id`: the ID of the QPU to run on (e.g. `"Aspen-9"`)
+4. `qpu_id`: the ID of the QPU to run on (e.g. `"Aspen-11"`)
 
 # Errors
 

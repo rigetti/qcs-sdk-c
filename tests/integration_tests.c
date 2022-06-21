@@ -64,7 +64,7 @@ bool test_bell_state() {
     // ANCHOR_END: errors
 
     //ANCHOR: get_data
-    const ExecutionData *ro = get_data(result->handle, "ro");
+    const RegisterData *ro = get_data(result->success.handle, "ro");
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -187,8 +187,8 @@ bool test_real_data_type() {
     }
 
     // ANCHOR: get_multiple
-    const ExecutionData *first = get_data(result->handle, "first");
-    const ExecutionData *second = get_data(result->handle, "second");
+    const RegisterData *first = get_data(result->success.handle, "first");
+    const RegisterData *second = get_data(result->success.handle, "second");
     // ANCHOR_END: get_multiple
 
     if (first == NULL || first->data.tag != DataType_Real) {
@@ -274,7 +274,7 @@ bool test_get_data_from_nonexistent_register() {
         );
     }
 
-    const ExecutionData *nonexistent = get_data(result->handle, "nonexistent");
+    const RegisterData *nonexistent = get_data(result->success.handle, "nonexistent");
 
     if (nonexistent != NULL) {
         return fail(
@@ -325,7 +325,7 @@ bool test_parametrization() {
                     result
             );
         }
-        const ExecutionData *ro = get_data(result->handle, "ro");
+        const RegisterData *ro = get_data(result->success.handle, "ro");
         found_one |= ro->data.byte[0][0];
         // Free intermediate results
         // ANCHOR: free_execution_result

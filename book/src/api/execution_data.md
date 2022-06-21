@@ -1,15 +1,11 @@
 # ExecutionData
 
-`ExecutionData` contains the actual results of an execution, you get a pointer to one by calling [`get_data`].
+`ExecutionData` contains a [`ResultHandle`] to the [`RegisterData`] containing the results of the program, as well as some metadata about the execution itself. You get an `ExecutionData` from the [`Success`] variant of an [`ExecutionResult`].
 
 ## Definition
 
 ```c
 {{#include ../../../libqcs.h:ExecutionData}}
-
-{{#include ../../../libqcs.h:DataType}}
-
-{{#include ../../../libqcs.h:DataType_Tag}}
 ```
 
 ## Safety
@@ -18,31 +14,12 @@ The memory for any `ExecutionData` will be freed when calling [`free_execution_r
 
 ## Attributes
 
-1. `number_of_shots` is the outer dimension of the 2D array of data. This should always be equal to the parameter provided to [`wrap_in_shots`] (or 1 if not called).
-2. `shot_length` is the inner dimension of the data array, corresponding to the dimension of the declared memory. For example, declaring `BIT` in Quil will result in a `shot_length` of 1, but declaring `BIT[2]` in Quil will result in a `shot_length` of 2.
-3. `data` is a `DataType` which contains the actual results as measured from the requested register. This is a 2D array with outer dimension of `number_of_shots` and inner dimension of `shot_length`. The type of this data depends on the type of the declared memory. The `tag` field tells you which type of data is contained within, then `byte` or `real` is the 2D array.
-
-## Variants
-
-The type of `data` will depend on how the memory was declared in Quil.
-
-### `Byte`
-
-The result of reading from a `BIT` or `OCTET` register is the `Byte` variant. `data.tag` will be `DataType_Byte`, and `data.byte` will be populated.
-
-### `Real`
-
-The result of reading from a `REAL` register is the `Real` variant. `data.tag` will be `DataType_Real`, and `data.real` will be populated.
-
-### Example
-
-Here we declare both `REAL` and `OCTET` registers which will correspond to `Real` and `Byte` variants.
-
-```c
-{{#include ../../../tests/integration_tests.c:test_real_data}}
-```
+1. `execution_duration_microseconds` is how long the program took to execute on the QPU. This is always 0 for QVM executions.
+2. `handle` is the [`ResultHandle`] that can be passed to [`get_data`] to get [`RegisterData`] containing the results of the program.
 
 [`get_data`]: get_data.md
 [`free_execution_result`]: free_execution_result.md
 [`ExecutionResult`]: execution_result.md
-[`wrap_in_shots`]: wrap_in_shots.md
+[`RegisterData`]: register_data.md
+[`Success`]: execution_result.md#success
+[`ResultHandle`]: result_handle.md

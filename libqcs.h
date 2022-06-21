@@ -24,9 +24,16 @@ typedef struct Executable Executable;
 typedef struct ResultHandle ResultHandle;
 // ANCHOR_END: ResultHandle
 
+// ANCHOR: ExecutionData
+typedef struct ExecutionData {
+    unsigned long execution_duration_microseconds;
+    struct ResultHandle *handle;
+} ExecutionData;
+// ANCHOR_END: ExecutionData
+
 // ANCHOR: ExecutionResult_Tag
 typedef enum ExecutionResult_Tag {
-    ExecutionResult_Handle,
+    ExecutionResult_Success,
     ExecutionResult_Error,
 } ExecutionResult_Tag;
 // ANCHOR_END: ExecutionResult_Tag
@@ -36,7 +43,7 @@ typedef struct ExecutionResult {
     ExecutionResult_Tag tag;
     union {
         struct {
-            struct ResultHandle *handle;
+            struct ExecutionData success;
         };
         struct {
             char *error;
@@ -69,13 +76,13 @@ typedef struct DataType {
 /**
  * The contents of a single register within a [`ResultHandle`], fetched with [`get_data`]
  */
-// ANCHOR: ExecutionData
-typedef struct ExecutionData {
+// ANCHOR: RegisterData
+typedef struct RegisterData {
     unsigned short number_of_shots;
     unsigned short shot_length;
     struct DataType data;
-} ExecutionData;
-// ANCHOR_END: ExecutionData
+} RegisterData;
+// ANCHOR_END: RegisterData
 
 /**
  * Constructs an [`Executable`] and returns a raw pointer to it.
@@ -194,7 +201,7 @@ void free_execution_result(struct ExecutionResult *result);
  * of a non-error call to [`execute_on_qvm`] or [`execute_on_qpu`]
  */
 // ANCHOR: get_data
-const struct ExecutionData *get_data(const struct ResultHandle *handle, const char *name);
+const struct RegisterData *get_data(const struct ResultHandle *handle, const char *name);
 // ANCHOR_END: get_data
 
 /**
