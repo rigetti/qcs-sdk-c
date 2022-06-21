@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.1.1...v0.2.0) (2022-06-21)
+
+
+### Breaking
+
+* Update interfaces to match `qcs-rust-sdk` 0.3.*. (#13) ([0d49aa7](https://github.com/rigetti/qcs-sdk-c/commit/0d49aa73726a68b293fb32949a3aef37cd6216f3)), closes [#13](https://github.com/rigetti/qcs-sdk-c/issues/13)
+
 ## [0.2.0](https://github.com/rigetti/qcs-sdk-c/compare/v0.1.1...v0.2.0) (2022-06-18)
 
 ### Breaking Changes
