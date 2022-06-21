@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html" class="active"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">13.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html"><strong aria-hidden="true">14.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html"><strong aria-hidden="true">15.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">16.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">17.</strong> free_executable</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html" class="active"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html"><strong aria-hidden="true">13.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">14.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html"><strong aria-hidden="true">15.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/register_data.html"><strong aria-hidden="true">16.</strong> RegisterData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">17.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">18.</strong> free_executable</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -146,13 +146,13 @@
 <p>An <code>ExecutionResult</code> is the struct you receive from a call to either <a href="execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="execute_on_qpu.html"><code>execute_on_qpu</code></a>. This struct is implemented as a tagged union, describing the possible outcomes of program execution.</p>
 <h2 id="safety"><a class="header" href="#safety">SAFETY</a></h2>
 <p><strong>You must pass this struct to <a href="free_execution_result.html"><code>free_execution_result</code></a> when you're done with it to avoid leaking the memory.</strong></p>
-<p><strong>Any <a href="execution_data.html"><code>ExecutionData</code></a> which was retrieved from this result will be freed when this is called.</strong></p>
+<p><strong>Any <a href="register_data.html"><code>RegisterData</code></a> which was retrieved from this result will be freed when this is called.</strong></p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
 <pre><code class="language-c">typedef struct ExecutionResult {
     ExecutionResult_Tag tag;
     union {
         struct {
-            struct ResultHandle *handle;
+            struct ExecutionData success;
         };
         struct {
             char *error;
@@ -163,11 +163,11 @@
 <h2 id="variants"><a class="header" href="#variants">Variants</a></h2>
 <p>There are multiple variants of <code>ExecutionResult</code>. The <code>tag</code> attribute determines which is in use via an enum:</p>
 <pre><code class="language-c">typedef enum ExecutionResult_Tag {
-    ExecutionResult_Handle,
+    ExecutionResult_Success,
     ExecutionResult_Error,
 } ExecutionResult_Tag;
 </code></pre>
-<p>The <a href="#error"><code>Error</code></a> variant indicates that execution failed. The <a href="#handle"><code>Handle</code></a> variant is populated in the case of a successful run, and provides access to a <a href="result_handle.html"><code>ResultHandle</code></a>.</p>
+<p>The <a href="#error"><code>Error</code></a> variant indicates that execution failed. The <a href="#success"><code>Success</code></a> variant is populated in the case of a successful run, and contains an <a href="execution_data.html"><code>ExecutionData</code></a>.</p>
 <h3 id="error"><a class="header" href="#error"><code>Error</code></a></h3>
 <p>If something goes wrong, <code>tag</code> will be <code>ExecutionResult_Error</code>, indicating it is the <code>Error</code> variant. This variant is a human-readable string of the error that occurred.</p>
 <h4 id="error-example"><a class="header" href="#error-example"><code>Error</code> Example</a></h4>
@@ -186,10 +186,10 @@
         );
     }
 </code></pre>
-<h3 id="handle"><a class="header" href="#handle"><code>Handle</code></a></h3>
-<p>If there is not an error, <code>tag</code> will instead be <code>ExecutionResult_Handle</code>. The <code>handle</code> attribute is a pointer to a <a href="result_handle.html"><code>ResultHandle</code></a> which can be used with <a href="get_data.html"><code>get_data</code></a>.</p>
+<h3 id="success"><a class="header" href="#success"><code>Success</code></a></h3>
+<p>If there is not an error, <code>tag</code> will instead be <code>ExecutionResult_Success</code>. The <code>success</code> attribute is an <a href="execution_data.html"><code>ExecutionData</code></a>.</p>
 <h4 id="handle-example"><a class="header" href="#handle-example"><code>Handle</code> Example</a></h4>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+<pre><code class="language-c">    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -208,7 +208,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../api/result_handle.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../api/execution_data.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -222,7 +222,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../api/result_handle.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../api/execution_data.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

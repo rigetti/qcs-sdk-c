@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">13.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html" class="active"><strong aria-hidden="true">14.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html"><strong aria-hidden="true">15.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">16.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">17.</strong> free_executable</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html"><strong aria-hidden="true">13.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">14.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html" class="active"><strong aria-hidden="true">15.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/register_data.html"><strong aria-hidden="true">16.</strong> RegisterData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">17.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">18.</strong> free_executable</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -143,28 +143,29 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="get_data"><a class="header" href="#get_data">get_data</a></h1>
-<p><code>get_data</code> is how you retrieve the actual results (in an <a href="execution_data.html"><code>ExecutionData</code></a>) from the <a href="result_handle.html"><code>ResultHandle</code></a> within the <a href="execution_result.html#handle"><code>Handle</code></a> variant of an <a href="execution_result.html"><code>ExecutionResult</code></a>. The register <code>name</code> provided to this function should match one that you provided to <a href="read_from.html"><code>read_from</code></a> (or <code>&quot;ro&quot;</code> if left at the default).</p>
+<p><code>get_data</code> is how you retrieve the actual results (in a <a href="register_data.html"><code>RegisterData</code></a>) from the <a href="result_handle.html"><code>ResultHandle</code></a> within the <a href="execution_data.html"><code>ExecutionData</code></a> from the <a href="execution_result.html#success"><code>Success</code></a> variant of an <a href="execution_result.html"><code>ExecutionResult</code></a>. The register <code>name</code> provided to this function should match one that you provided to <a href="read_from.html"><code>read_from</code></a> (or <code>&quot;ro&quot;</code> if left at the default).</p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
-<pre><code class="language-c">const struct ExecutionData *get_data(const struct ResultHandle *handle, const char *name);
+<pre><code class="language-c">const struct RegisterData *get_data(const struct ResultHandle *handle, const char *name);
 </code></pre>
 <h2 id="safety"><a class="header" href="#safety">Safety</a></h2>
-<p>All inputs must be non-null. <code>name</code> must be a nul-terminated string. <code>handle</code> must be the result of a non-error call to <a href="execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="execute_on_qpu.html"><code>execute_on_qpu</code></a>. If there are no results matching the provided <code>name</code> then the return value will be <code>NULL</code>, make sure to check this return value.</p>
+<p>All inputs must be non-null. <code>name</code> must be a nul-terminated string. <code>handle</code> must come from the result of a non-error call to <a href="execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="execute_on_qpu.html"><code>execute_on_qpu</code></a>. If there are no results matching the provided <code>name</code> then the return value will be <code>NULL</code>, make sure to check this return value.</p>
 <h2 id="arguments"><a class="header" href="#arguments">Arguments</a></h2>
 <ol>
-<li><code>handle</code> is the <code>handle</code> attribute of <a href="execution_result.html"><code>ExecutionResult</code></a> when it is not an error.</li>
-<li><code>name</code> is the name of a register you want the data from. It should correspond to a call to <a href="read_from.html"><code>read_from</code></a> and a Quil <code>DECLARE</code> instruction.</li>
+<li><code>handle</code> is the <code>handle</code> attribute of <a href="execution_data.html"><code>ExecutionData</code></a>.</li>
+<li><code>name</code> is the name of a register you want the data from. It should correspond to a call to <a href="read_from.html"><code>read_from</code></a> (or the default of <code>&quot;ro&quot;</code>) and a Quil <code>DECLARE</code> instruction.</li>
 </ol>
 <h2 id="returns"><a class="header" href="#returns">Returns</a></h2>
-<p>An <a href="execution_data.html"><code>ExecutionData</code></a> if there was data for the requested register, or <code>NULL</code> if not.</p>
+<p>A <a href="register_data.html"><code>RegisterData</code></a> if there was data for the requested register, or <code>NULL</code> if not.</p>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
 <pre><code class="language-c">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
     ExecutionResult *result = execute_on_qvm(exe);
 
-    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
+    const RegisterData *first = get_data(result-&gt;success.handle, &quot;first&quot;);
+    const RegisterData *second = get_data(result-&gt;success.handle, &quot;second&quot;);
 </code></pre>
+<p>Our <a href="execution_result.html"><code>ExecutionResult</code></a> named <code>result</code> is a <a href="execution_result.html#success"><code>Success</code></a> variant, so we can access the <a href="execution_data.html"><code>ExecutionData</code></a> via <code>result-&gt;success</code>. We can then call <a href="get_data.html"><code>get_data</code></a> with that <a href="execution_data.html"><code>ExecutionData</code></a>'s <code>handle</code> attribute and the name of a register we want to retrieve.</p>
 
                     </main>
 
@@ -174,7 +175,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../api/execution_data.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../api/register_data.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -188,7 +189,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../api/execution_data.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../api/register_data.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

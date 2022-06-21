@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="api/result_handle.html"><strong aria-hidden="true">13.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="api/get_data.html"><strong aria-hidden="true">14.</strong> get_data</a></li><li class="chapter-item expanded "><a href="api/execution_data.html"><strong aria-hidden="true">15.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="api/free_execution_result.html"><strong aria-hidden="true">16.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="api/free_executable.html"><strong aria-hidden="true">17.</strong> free_executable</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="api/execution_data.html"><strong aria-hidden="true">13.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="api/result_handle.html"><strong aria-hidden="true">14.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="api/get_data.html"><strong aria-hidden="true">15.</strong> get_data</a></li><li class="chapter-item expanded "><a href="api/register_data.html"><strong aria-hidden="true">16.</strong> RegisterData</a></li><li class="chapter-item expanded "><a href="api/free_execution_result.html"><strong aria-hidden="true">17.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="api/free_executable.html"><strong aria-hidden="true">18.</strong> free_executable</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -193,10 +193,12 @@
         execute_on_qpu --&gt; ExecutionResult
         click ExecutionResult &quot;/api/execution_result.html&quot;
         ExecutionResult --&gt; check_for_errors((Check for Errors))
-        --&gt; get_data{{get_data}}
         --&gt; ExecutionData
+        --&gt; get_data{{get_data}}
+        --&gt; RegisterData
         click get_data &quot;/api/get_data.html&quot;
         click ExecutionData &quot;/api/execution_data.html&quot;
+        click RegisterData &quot;/api/register_data.html&quot;
         ExecutionResult --When done with all data--&gt; free_program_result{{free_execution_result}}
         click free_program_result &quot;/api/free_execution_result.html&quot;
         
@@ -235,7 +237,7 @@
     ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <p>If we want to run on a real QPU, we swap out the function and add a parameter specifying which QPU to run against:</p>
-<pre><code class="language-c">    ExecutionResult result = execute_on_qpu(exe, &quot;Aspen-9&quot;);
+<pre><code class="language-c">    ExecutionResult result = execute_on_qpu(exe, &quot;Aspen-11&quot;);
 </code></pre>
 <h3 id="step-4-handle-errors"><a class="header" href="#step-4-handle-errors">Step 4: Handle Errors</a></h3>
 <p>If something goes wrong, <a href="api/execution_result.html"><code>ExecutionResult</code></a> will be the <a href="api/execution_result.html#error"><code>Error</code></a> variant. This field contains a human-readable description of the error.</p>
@@ -250,8 +252,8 @@
 </code></pre>
 <p>For the sake of our test cases, we have defined a function called <code>fail</code> which frees the memory of <code>result</code> and <code>exe</code> for us. <strong>Make sure to always free all <a href="api/execution_result.html"><code>ExecutionResult</code></a>s using <a href="api/free_execution_result.html"><code>free_execution_result</code></a> and any <a href="api/executable.html"><code>Executable</code></a> using <a href="api/free_executable.html"><code>free_executable</code></a></strong>. </p>
 <h3 id="step-5-process-results"><a class="header" href="#step-5-process-results">Step 5: Process Results</a></h3>
-<p>If there were no errors, then you can safely read your results out of the requested registers using <a href="api/get_data.html"><code>get_data</code></a> which returns an <a href="api/execution_data.html"><code>ExecutionData</code></a>! In this case, we know a successful response will be a <a href="api/execution_result.html#byte"><code>Byte</code></a> variant since we read out of <code>BIT</code> memory.</p>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+<p>If there were no errors, then you can safely read your results out of the requested registers using <a href="api/get_data.html"><code>get_data</code></a> which returns a <a href="api/register_data.html"><code>RegisterData</code></a>! In this case, we know a successful response will be a <a href="api/execution_result.html#byte"><code>Byte</code></a> variant since we read out of <code>BIT</code> memory.</p>
+<pre><code class="language-c">    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -359,7 +361,7 @@ bool test_bell_state() {
         );
     }
 
-    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -591,7 +593,7 @@ bool test_bell_state() {
 <h2 id="arguments-4"><a class="header" href="#arguments-4">Arguments</a></h2>
 <ol>
 <li><code>executable</code>: The <a href="api/executable.html"><code>Executable</code></a> to execute.</li>
-<li><code>qpu_id</code>: the ID of the QPU to run on (e.g. <code>&quot;Aspen-9&quot;</code>)</li>
+<li><code>qpu_id</code>: the ID of the QPU to run on (e.g. <code>&quot;Aspen-11&quot;</code>)</li>
 </ol>
 <h1 id="errors-1"><a class="header" href="#errors-1">Errors</a></h1>
 <p>This program will return the <a href="api/execution_result.html#error"><code>Error</code></a> variant of <a href="api/execution_result.html"><code>ExecutionResult</code></a> with a human-readable description of the error. Some common errors:</p>
@@ -605,13 +607,13 @@ bool test_bell_state() {
 <p>An <code>ExecutionResult</code> is the struct you receive from a call to either <a href="api/execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="api/execute_on_qpu.html"><code>execute_on_qpu</code></a>. This struct is implemented as a tagged union, describing the possible outcomes of program execution.</p>
 <h2 id="safety-5"><a class="header" href="#safety-5">SAFETY</a></h2>
 <p><strong>You must pass this struct to <a href="api/free_execution_result.html"><code>free_execution_result</code></a> when you're done with it to avoid leaking the memory.</strong></p>
-<p><strong>Any <a href="api/execution_data.html"><code>ExecutionData</code></a> which was retrieved from this result will be freed when this is called.</strong></p>
+<p><strong>Any <a href="api/register_data.html"><code>RegisterData</code></a> which was retrieved from this result will be freed when this is called.</strong></p>
 <h2 id="definition-7"><a class="header" href="#definition-7">Definition</a></h2>
 <pre><code class="language-c">typedef struct ExecutionResult {
     ExecutionResult_Tag tag;
     union {
         struct {
-            struct ResultHandle *handle;
+            struct ExecutionData success;
         };
         struct {
             char *error;
@@ -622,11 +624,11 @@ bool test_bell_state() {
 <h2 id="variants"><a class="header" href="#variants">Variants</a></h2>
 <p>There are multiple variants of <code>ExecutionResult</code>. The <code>tag</code> attribute determines which is in use via an enum:</p>
 <pre><code class="language-c">typedef enum ExecutionResult_Tag {
-    ExecutionResult_Handle,
+    ExecutionResult_Success,
     ExecutionResult_Error,
 } ExecutionResult_Tag;
 </code></pre>
-<p>The <a href="api/execution_result.html#error"><code>Error</code></a> variant indicates that execution failed. The <a href="api/execution_result.html#handle"><code>Handle</code></a> variant is populated in the case of a successful run, and provides access to a <a href="api/result_handle.html"><code>ResultHandle</code></a>.</p>
+<p>The <a href="api/execution_result.html#error"><code>Error</code></a> variant indicates that execution failed. The <a href="api/execution_result.html#success"><code>Success</code></a> variant is populated in the case of a successful run, and contains an <a href="api/execution_data.html"><code>ExecutionData</code></a>.</p>
 <h3 id="error"><a class="header" href="#error"><code>Error</code></a></h3>
 <p>If something goes wrong, <code>tag</code> will be <code>ExecutionResult_Error</code>, indicating it is the <code>Error</code> variant. This variant is a human-readable string of the error that occurred.</p>
 <h4 id="error-example"><a class="header" href="#error-example"><code>Error</code> Example</a></h4>
@@ -645,10 +647,10 @@ bool test_bell_state() {
         );
     }
 </code></pre>
-<h3 id="handle"><a class="header" href="#handle"><code>Handle</code></a></h3>
-<p>If there is not an error, <code>tag</code> will instead be <code>ExecutionResult_Handle</code>. The <code>handle</code> attribute is a pointer to a <a href="api/result_handle.html"><code>ResultHandle</code></a> which can be used with <a href="api/get_data.html"><code>get_data</code></a>.</p>
+<h3 id="success"><a class="header" href="#success"><code>Success</code></a></h3>
+<p>If there is not an error, <code>tag</code> will instead be <code>ExecutionResult_Success</code>. The <code>success</code> attribute is an <a href="api/execution_data.html"><code>ExecutionData</code></a>.</p>
 <h4 id="handle-example"><a class="header" href="#handle-example"><code>Handle</code> Example</a></h4>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+<pre><code class="language-c">    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -658,42 +660,58 @@ bool test_bell_state() {
         );
     }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="resulthandle"><a class="header" href="#resulthandle">ResultHandle</a></h1>
-<p><code>ResultHandle</code> is an opaque struct managed by the SDK which allows you to dynamically read out results with <a href="api/get_data.html"><code>get_data</code></a>. You will only ever have a pointer to this struct accessed from within an <a href="api/execution_result.html"><code>ExecutionResult</code></a> if it is the <a href="api/execution_result.html#handle"><code>Handle</code></a> variant.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="executiondata"><a class="header" href="#executiondata">ExecutionData</a></h1>
+<p><code>ExecutionData</code> contains a <a href="api/result_handle.html"><code>ResultHandle</code></a> to the <a href="api/register_data.html"><code>RegisterData</code></a> containing the results of the program, as well as some metadata about the execution itself. You get an <code>ExecutionData</code> from the <a href="api/execution_result.html#success"><code>Success</code></a> variant of an <a href="api/execution_result.html"><code>ExecutionResult</code></a>.</p>
 <h2 id="definition-8"><a class="header" href="#definition-8">Definition</a></h2>
+<pre><code class="language-c">typedef struct ExecutionData {
+    unsigned long execution_duration_microseconds;
+    struct ResultHandle *handle;
+} ExecutionData;
+</code></pre>
+<h2 id="safety-6"><a class="header" href="#safety-6">Safety</a></h2>
+<p>The memory for any <code>ExecutionData</code> will be freed when calling <a href="api/free_execution_result.html"><code>free_execution_result</code></a> for the corresponding <a href="api/execution_result.html"><code>ExecutionResult</code></a>. <strong>Make sure not to free the <a href="api/execution_result.html"><code>ExecutionResult</code></a> until after you're done with the data</strong>.</p>
+<h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
+<ol>
+<li><code>execution_duration_microseconds</code> is how long the program took to execute on the QPU. This is always 0 for QVM executions.</li>
+<li><code>handle</code> is the <a href="api/result_handle.html"><code>ResultHandle</code></a> that can be passed to <a href="api/get_data.html"><code>get_data</code></a> to get <a href="api/register_data.html"><code>RegisterData</code></a> containing the results of the program.</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="resulthandle"><a class="header" href="#resulthandle">ResultHandle</a></h1>
+<p><code>ResultHandle</code> is an opaque struct managed by the SDK which allows you to dynamically read out results with <a href="api/get_data.html"><code>get_data</code></a>. You will only ever have a pointer to this struct accessed from within an <a href="api/execution_result.html"><code>ExecutionResult</code></a> if it is the <a href="api/execution_result.html#success"><code>Success</code></a> variant.</p>
+<h2 id="definition-9"><a class="header" href="#definition-9">Definition</a></h2>
 <pre><code class="language-c">typedef struct ResultHandle ResultHandle;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="get_data"><a class="header" href="#get_data">get_data</a></h1>
-<p><code>get_data</code> is how you retrieve the actual results (in an <a href="api/execution_data.html"><code>ExecutionData</code></a>) from the <a href="api/result_handle.html"><code>ResultHandle</code></a> within the <a href="api/execution_result.html#handle"><code>Handle</code></a> variant of an <a href="api/execution_result.html"><code>ExecutionResult</code></a>. The register <code>name</code> provided to this function should match one that you provided to <a href="api/read_from.html"><code>read_from</code></a> (or <code>&quot;ro&quot;</code> if left at the default).</p>
-<h2 id="definition-9"><a class="header" href="#definition-9">Definition</a></h2>
-<pre><code class="language-c">const struct ExecutionData *get_data(const struct ResultHandle *handle, const char *name);
+<p><code>get_data</code> is how you retrieve the actual results (in a <a href="api/register_data.html"><code>RegisterData</code></a>) from the <a href="api/result_handle.html"><code>ResultHandle</code></a> within the <a href="api/execution_data.html"><code>ExecutionData</code></a> from the <a href="api/execution_result.html#success"><code>Success</code></a> variant of an <a href="api/execution_result.html"><code>ExecutionResult</code></a>. The register <code>name</code> provided to this function should match one that you provided to <a href="api/read_from.html"><code>read_from</code></a> (or <code>&quot;ro&quot;</code> if left at the default).</p>
+<h2 id="definition-10"><a class="header" href="#definition-10">Definition</a></h2>
+<pre><code class="language-c">const struct RegisterData *get_data(const struct ResultHandle *handle, const char *name);
 </code></pre>
-<h2 id="safety-6"><a class="header" href="#safety-6">Safety</a></h2>
-<p>All inputs must be non-null. <code>name</code> must be a nul-terminated string. <code>handle</code> must be the result of a non-error call to <a href="api/execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="api/execute_on_qpu.html"><code>execute_on_qpu</code></a>. If there are no results matching the provided <code>name</code> then the return value will be <code>NULL</code>, make sure to check this return value.</p>
+<h2 id="safety-7"><a class="header" href="#safety-7">Safety</a></h2>
+<p>All inputs must be non-null. <code>name</code> must be a nul-terminated string. <code>handle</code> must come from the result of a non-error call to <a href="api/execute_on_qvm.html"><code>execute_on_qvm</code></a> or <a href="api/execute_on_qpu.html"><code>execute_on_qpu</code></a>. If there are no results matching the provided <code>name</code> then the return value will be <code>NULL</code>, make sure to check this return value.</p>
 <h2 id="arguments-5"><a class="header" href="#arguments-5">Arguments</a></h2>
 <ol>
-<li><code>handle</code> is the <code>handle</code> attribute of <a href="api/execution_result.html"><code>ExecutionResult</code></a> when it is not an error.</li>
-<li><code>name</code> is the name of a register you want the data from. It should correspond to a call to <a href="api/read_from.html"><code>read_from</code></a> and a Quil <code>DECLARE</code> instruction.</li>
+<li><code>handle</code> is the <code>handle</code> attribute of <a href="api/execution_data.html"><code>ExecutionData</code></a>.</li>
+<li><code>name</code> is the name of a register you want the data from. It should correspond to a call to <a href="api/read_from.html"><code>read_from</code></a> (or the default of <code>&quot;ro&quot;</code>) and a Quil <code>DECLARE</code> instruction.</li>
 </ol>
 <h2 id="returns"><a class="header" href="#returns">Returns</a></h2>
-<p>An <a href="api/execution_data.html"><code>ExecutionData</code></a> if there was data for the requested register, or <code>NULL</code> if not.</p>
+<p>A <a href="api/register_data.html"><code>RegisterData</code></a> if there was data for the requested register, or <code>NULL</code> if not.</p>
 <h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
 <pre><code class="language-c">    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
     read_from(exe, &quot;first&quot;);
     read_from(exe, &quot;second&quot;);
     ExecutionResult *result = execute_on_qvm(exe);
 
-    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
+    const RegisterData *first = get_data(result-&gt;success.handle, &quot;first&quot;);
+    const RegisterData *second = get_data(result-&gt;success.handle, &quot;second&quot;);
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="executiondata"><a class="header" href="#executiondata">ExecutionData</a></h1>
-<p><code>ExecutionData</code> contains the actual results of an execution, you get a pointer to one by calling <a href="api/get_data.html"><code>get_data</code></a>.</p>
-<h2 id="definition-10"><a class="header" href="#definition-10">Definition</a></h2>
-<pre><code class="language-c">typedef struct ExecutionData {
+<p>Our <a href="api/execution_result.html"><code>ExecutionResult</code></a> named <code>result</code> is a <a href="api/execution_result.html#success"><code>Success</code></a> variant, so we can access the <a href="api/execution_data.html"><code>ExecutionData</code></a> via <code>result-&gt;success</code>. We can then call <a href="api/get_data.html"><code>get_data</code></a> with that <a href="api/execution_data.html"><code>ExecutionData</code></a>'s <code>handle</code> attribute and the name of a register we want to retrieve.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="registerdata"><a class="header" href="#registerdata">RegisterData</a></h1>
+<p><code>RegisterData</code> contains the actual results of an execution for a partiuclar register (e.g., <code>&quot;ro&quot;</code>). You get a pointer to one by calling <a href="api/get_data.html"><code>get_data</code></a>.</p>
+<h2 id="definition-11"><a class="header" href="#definition-11">Definition</a></h2>
+<pre><code class="language-c">typedef struct RegisterData {
     unsigned short number_of_shots;
     unsigned short shot_length;
     struct DataType data;
-} ExecutionData;
+} RegisterData;
 
 typedef struct DataType {
     DataType_Tag tag;
@@ -712,9 +730,9 @@ typedef enum DataType_Tag {
     DataType_Real,
 } DataType_Tag;
 </code></pre>
-<h2 id="safety-7"><a class="header" href="#safety-7">Safety</a></h2>
-<p>The memory for any <code>ExecutionData</code> will be freed when calling <a href="api/free_execution_result.html"><code>free_execution_result</code></a> for the corresponding <a href="api/execution_result.html"><code>ExecutionResult</code></a>. <strong>Make sure not to free the <a href="api/execution_result.html"><code>ExecutionResult</code></a> until after you're done with the data</strong>.</p>
-<h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
+<h2 id="safety-8"><a class="header" href="#safety-8">Safety</a></h2>
+<p>The memory for any <code>RegisterData</code> will be freed when calling <a href="api/free_execution_result.html"><code>free_execution_result</code></a> for the corresponding <a href="api/execution_result.html"><code>ExecutionResult</code></a>. <strong>Make sure not to free the <a href="api/execution_result.html"><code>ExecutionResult</code></a> until after you're done with the data</strong>.</p>
+<h2 id="attributes-1"><a class="header" href="#attributes-1">Attributes</a></h2>
 <ol>
 <li><code>number_of_shots</code> is the outer dimension of the 2D array of data. This should always be equal to the parameter provided to <a href="api/wrap_in_shots.html"><code>wrap_in_shots</code></a> (or 1 if not called).</li>
 <li><code>shot_length</code> is the inner dimension of the data array, corresponding to the dimension of the declared memory. For example, declaring <code>BIT</code> in Quil will result in a <code>shot_length</code> of 1, but declaring <code>BIT[2]</code> in Quil will result in a <code>shot_length</code> of 2.</li>
@@ -751,8 +769,8 @@ bool test_real_data_type() {
         );
     }
 
-    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
+    const RegisterData *first = get_data(result-&gt;success.handle, &quot;first&quot;);
+    const RegisterData *second = get_data(result-&gt;success.handle, &quot;second&quot;);
 
     if (first == NULL || first-&gt;data.tag != DataType_Real) {
         return fail(
@@ -805,16 +823,16 @@ bool test_real_data_type() {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="free_execution_result"><a class="header" href="#free_execution_result"><code>free_execution_result</code></a></h1>
 <p><code>free_execution_result</code> is a memory deallocation function which must be called for any <a href="api/execution_result.html"><code>ExecutionResult</code></a> to avoid leakage.</p>
-<h2 id="safety-8"><a class="header" href="#safety-8">Safety</a></h2>
+<h2 id="safety-9"><a class="header" href="#safety-9">Safety</a></h2>
 <p><strong>Only call this function with the result of <a href="api/execute_on_qpu.html"><code>execute_on_qpu</code></a> or <a href="api/execute_on_qvm.html"><code>execute_on_qvm</code></a> as it expects memory that was originally allocated by Rust.</strong></p>
-<h2 id="definition-11"><a class="header" href="#definition-11">Definition</a></h2>
+<h2 id="definition-12"><a class="header" href="#definition-12">Definition</a></h2>
 <pre><code class="language-c">void free_execution_result(struct ExecutionResult *result);
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="free_executable"><a class="header" href="#free_executable"><code>free_executable</code></a></h1>
 <p><code>free_executable</code> is a memory deallocation function which must be called for any <a href="api/executable.html"><code>Executable</code></a> to avoid leakage.</p>
-<h2 id="safety-9"><a class="header" href="#safety-9">Safety</a></h2>
+<h2 id="safety-10"><a class="header" href="#safety-10">Safety</a></h2>
 <p><strong>Only call this function with the result of <a href="api/executable_from_quil.html"><code>executable_from_quil</code></a> as it expects memory that was originally allocated by Rust.</strong></p>
-<h2 id="definition-12"><a class="header" href="#definition-12">Definition</a></h2>
+<h2 id="definition-13"><a class="header" href="#definition-13">Definition</a></h2>
 <pre><code class="language-c">void free_executable(struct Executable *executable);
 </code></pre>
 

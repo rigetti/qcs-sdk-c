@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">13.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html"><strong aria-hidden="true">14.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html" class="active"><strong aria-hidden="true">15.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">16.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">17.</strong> free_executable</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting_started.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="../api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="../api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="../api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="../api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="../api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="../api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="../api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="../api/execution_data.html" class="active"><strong aria-hidden="true">13.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="../api/result_handle.html"><strong aria-hidden="true">14.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="../api/get_data.html"><strong aria-hidden="true">15.</strong> get_data</a></li><li class="chapter-item expanded "><a href="../api/register_data.html"><strong aria-hidden="true">16.</strong> RegisterData</a></li><li class="chapter-item expanded "><a href="../api/free_execution_result.html"><strong aria-hidden="true">17.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="../api/free_executable.html"><strong aria-hidden="true">18.</strong> free_executable</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -143,132 +143,30 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="executiondata"><a class="header" href="#executiondata">ExecutionData</a></h1>
-<p><code>ExecutionData</code> contains the actual results of an execution, you get a pointer to one by calling <a href="get_data.html"><code>get_data</code></a>.</p>
+<p><code>ExecutionData</code> contains a <a href="result_handle.html"><code>ResultHandle</code></a> to the <a href="register_data.html"><code>RegisterData</code></a> containing the results of the program, as well as some metadata about the execution itself. You get an <code>ExecutionData</code> from the <a href="execution_result.html#success"><code>Success</code></a> variant of an <a href="execution_result.html"><code>ExecutionResult</code></a>.</p>
 <h2 id="definition"><a class="header" href="#definition">Definition</a></h2>
 <pre><code class="language-c">typedef struct ExecutionData {
-    unsigned short number_of_shots;
-    unsigned short shot_length;
-    struct DataType data;
+    unsigned long execution_duration_microseconds;
+    struct ResultHandle *handle;
 } ExecutionData;
-
-typedef struct DataType {
-    DataType_Tag tag;
-    union {
-        struct {
-            char **byte;
-        };
-        struct {
-            double **real;
-        };
-    };
-} DataType;
-
-typedef enum DataType_Tag {
-    DataType_Byte,
-    DataType_Real,
-} DataType_Tag;
 </code></pre>
 <h2 id="safety"><a class="header" href="#safety">Safety</a></h2>
 <p>The memory for any <code>ExecutionData</code> will be freed when calling <a href="free_execution_result.html"><code>free_execution_result</code></a> for the corresponding <a href="execution_result.html"><code>ExecutionResult</code></a>. <strong>Make sure not to free the <a href="execution_result.html"><code>ExecutionResult</code></a> until after you're done with the data</strong>.</p>
 <h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
 <ol>
-<li><code>number_of_shots</code> is the outer dimension of the 2D array of data. This should always be equal to the parameter provided to <a href="wrap_in_shots.html"><code>wrap_in_shots</code></a> (or 1 if not called).</li>
-<li><code>shot_length</code> is the inner dimension of the data array, corresponding to the dimension of the declared memory. For example, declaring <code>BIT</code> in Quil will result in a <code>shot_length</code> of 1, but declaring <code>BIT[2]</code> in Quil will result in a <code>shot_length</code> of 2.</li>
-<li><code>data</code> is a <code>DataType</code> which contains the actual results as measured from the requested register. This is a 2D array with outer dimension of <code>number_of_shots</code> and inner dimension of <code>shot_length</code>. The type of this data depends on the type of the declared memory. The <code>tag</code> field tells you which type of data is contained within, then <code>byte</code> or <code>real</code> is the 2D array.</li>
+<li><code>execution_duration_microseconds</code> is how long the program took to execute on the QPU. This is always 0 for QVM executions.</li>
+<li><code>handle</code> is the <a href="result_handle.html"><code>ResultHandle</code></a> that can be passed to <a href="get_data.html"><code>get_data</code></a> to get <a href="register_data.html"><code>RegisterData</code></a> containing the results of the program.</li>
 </ol>
-<h2 id="variants"><a class="header" href="#variants">Variants</a></h2>
-<p>The type of <code>data</code> will depend on how the memory was declared in Quil.</p>
-<h3 id="byte"><a class="header" href="#byte"><code>Byte</code></a></h3>
-<p>The result of reading from a <code>BIT</code> or <code>OCTET</code> register is the <code>Byte</code> variant. <code>data.tag</code> will be <code>DataType_Byte</code>, and <code>data.byte</code> will be populated.</p>
-<h3 id="real"><a class="header" href="#real"><code>Real</code></a></h3>
-<p>The result of reading from a <code>REAL</code> register is the <code>Real</code> variant. <code>data.tag</code> will be <code>DataType_Real</code>, and <code>data.real</code> will be populated.</p>
-<h3 id="example"><a class="header" href="#example">Example</a></h3>
-<p>Here we declare both <code>REAL</code> and <code>OCTET</code> registers which will correspond to <code>Real</code> and <code>Byte</code> variants.</p>
-<pre><code class="language-c">char *REAL_MEMORY_PROGRAM =
-        &quot;DECLARE first REAL[1]\n&quot;
-        &quot;DECLARE second OCTET[1]\n&quot;
-        &quot;MOVE first[0] 3.141\n&quot;
-        &quot;MOVE second[0] 2\n&quot;;
-
-bool test_real_data_type() {
-    const char *TEST_NAME = &quot;test_real_data_type&quot;;
-
-    Executable *exe = executable_from_quil(REAL_MEMORY_PROGRAM);
-    read_from(exe, &quot;first&quot;);
-    read_from(exe, &quot;second&quot;);
-    ExecutionResult *result = execute_on_qvm(exe);
-
-    if (result-&gt;tag == ExecutionResult_Error) {
-        return fail(
-                TEST_NAME,
-                result-&gt;error,
-                exe,
-                result
-        );
-    }
-
-    const ExecutionData *first = get_data(result-&gt;handle, &quot;first&quot;);
-    const ExecutionData *second = get_data(result-&gt;handle, &quot;second&quot;);
-
-    if (first == NULL || first-&gt;data.tag != DataType_Real) {
-        return fail(
-                TEST_NAME,
-                &quot;first register did not contain real data&quot;,
-                exe,
-                result
-        );
-    }
-    if (second == NULL || second-&gt;data.tag != DataType_Byte) {
-        return fail(
-                TEST_NAME,
-                &quot;second register did not contain byte data&quot;,
-                exe,
-                result
-        );
-    }
-
-    if (first-&gt;data.real[0][0] != 3.141) {
-        char message[50];
-        sprintf(
-                message,
-                &quot;Found %f in first, expected 3.141&quot;,
-                first-&gt;data.real[0][0]
-        );
-        return fail(
-                TEST_NAME,
-                message,
-                exe,
-                result
-        );
-    }
-    if (second-&gt;data.byte[0][0] != 2) {
-        char message[50];
-        sprintf(
-                message,
-                &quot;Found %d in first, expected 2&quot;,
-                second-&gt;data.byte[0][0]
-        );
-        return fail(
-                TEST_NAME,
-                message,
-                exe,
-                result
-        );
-    }
-
-    return succeed(TEST_NAME, exe, result);
-}
-</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../api/get_data.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../api/execution_result.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="../api/free_execution_result.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../api/result_handle.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -278,11 +176,11 @@ bool test_real_data_type() {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../api/get_data.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../api/execution_result.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../api/free_execution_result.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../api/result_handle.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

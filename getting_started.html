@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting_started.html" class="active"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="api/result_handle.html"><strong aria-hidden="true">13.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="api/get_data.html"><strong aria-hidden="true">14.</strong> get_data</a></li><li class="chapter-item expanded "><a href="api/execution_data.html"><strong aria-hidden="true">15.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="api/free_execution_result.html"><strong aria-hidden="true">16.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="api/free_executable.html"><strong aria-hidden="true">17.</strong> free_executable</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded affix "><li class="part-title">C SDK</li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting_started.html" class="active"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Configuration</div></li><li class="spacer"></li><li class="chapter-item expanded affix "><li class="part-title">API</li><li class="chapter-item expanded "><a href="api/executable_from_quil.html"><strong aria-hidden="true">5.</strong> executable_from_quil</a></li><li class="chapter-item expanded "><a href="api/executable.html"><strong aria-hidden="true">6.</strong> Executable</a></li><li class="chapter-item expanded "><a href="api/read_from.html"><strong aria-hidden="true">7.</strong> read_from</a></li><li class="chapter-item expanded "><a href="api/set_param.html"><strong aria-hidden="true">8.</strong> set_param</a></li><li class="chapter-item expanded "><a href="api/wrap_in_shots.html"><strong aria-hidden="true">9.</strong> wrap_in_shots</a></li><li class="chapter-item expanded "><a href="api/execute_on_qvm.html"><strong aria-hidden="true">10.</strong> execute_on_qvm</a></li><li class="chapter-item expanded "><a href="api/execute_on_qpu.html"><strong aria-hidden="true">11.</strong> execute_on_qpu</a></li><li class="chapter-item expanded "><a href="api/execution_result.html"><strong aria-hidden="true">12.</strong> ExecutionResult</a></li><li class="chapter-item expanded "><a href="api/execution_data.html"><strong aria-hidden="true">13.</strong> ExecutionData</a></li><li class="chapter-item expanded "><a href="api/result_handle.html"><strong aria-hidden="true">14.</strong> ResultHandle</a></li><li class="chapter-item expanded "><a href="api/get_data.html"><strong aria-hidden="true">15.</strong> get_data</a></li><li class="chapter-item expanded "><a href="api/register_data.html"><strong aria-hidden="true">16.</strong> RegisterData</a></li><li class="chapter-item expanded "><a href="api/free_execution_result.html"><strong aria-hidden="true">17.</strong> free_execution_result</a></li><li class="chapter-item expanded "><a href="api/free_executable.html"><strong aria-hidden="true">18.</strong> free_executable</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -173,10 +173,12 @@
         execute_on_qpu --&gt; ExecutionResult
         click ExecutionResult &quot;/api/execution_result.html&quot;
         ExecutionResult --&gt; check_for_errors((Check for Errors))
-        --&gt; get_data{{get_data}}
         --&gt; ExecutionData
+        --&gt; get_data{{get_data}}
+        --&gt; RegisterData
         click get_data &quot;/api/get_data.html&quot;
         click ExecutionData &quot;/api/execution_data.html&quot;
+        click RegisterData &quot;/api/register_data.html&quot;
         ExecutionResult --When done with all data--&gt; free_program_result{{free_execution_result}}
         click free_program_result &quot;/api/free_execution_result.html&quot;
         
@@ -215,7 +217,7 @@
     ExecutionResult *result = execute_on_qvm(exe);
 </code></pre>
 <p>If we want to run on a real QPU, we swap out the function and add a parameter specifying which QPU to run against:</p>
-<pre><code class="language-c">    ExecutionResult result = execute_on_qpu(exe, &quot;Aspen-9&quot;);
+<pre><code class="language-c">    ExecutionResult result = execute_on_qpu(exe, &quot;Aspen-11&quot;);
 </code></pre>
 <h3 id="step-4-handle-errors"><a class="header" href="#step-4-handle-errors">Step 4: Handle Errors</a></h3>
 <p>If something goes wrong, <a href="api/execution_result.html"><code>ExecutionResult</code></a> will be the <a href="api/execution_result.html#error"><code>Error</code></a> variant. This field contains a human-readable description of the error.</p>
@@ -230,8 +232,8 @@
 </code></pre>
 <p>For the sake of our test cases, we have defined a function called <code>fail</code> which frees the memory of <code>result</code> and <code>exe</code> for us. <strong>Make sure to always free all <a href="api/execution_result.html"><code>ExecutionResult</code></a>s using <a href="api/free_execution_result.html"><code>free_execution_result</code></a> and any <a href="api/executable.html"><code>Executable</code></a> using <a href="api/free_executable.html"><code>free_executable</code></a></strong>. </p>
 <h3 id="step-5-process-results"><a class="header" href="#step-5-process-results">Step 5: Process Results</a></h3>
-<p>If there were no errors, then you can safely read your results out of the requested registers using <a href="api/get_data.html"><code>get_data</code></a> which returns an <a href="api/execution_data.html"><code>ExecutionData</code></a>! In this case, we know a successful response will be a <a href="api/execution_result.html#byte"><code>Byte</code></a> variant since we read out of <code>BIT</code> memory.</p>
-<pre><code class="language-c">    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+<p>If there were no errors, then you can safely read your results out of the requested registers using <a href="api/get_data.html"><code>get_data</code></a> which returns a <a href="api/register_data.html"><code>RegisterData</code></a>! In this case, we know a successful response will be a <a href="api/execution_result.html#byte"><code>Byte</code></a> variant since we read out of <code>BIT</code> memory.</p>
+<pre><code class="language-c">    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
@@ -339,7 +341,7 @@ bool test_bell_state() {
         );
     }
 
-    const ExecutionData *ro = get_data(result-&gt;handle, &quot;ro&quot;);
+    const RegisterData *ro = get_data(result-&gt;success.handle, &quot;ro&quot;);
     if (ro == NULL) {
         return fail(
                 TEST_NAME,
