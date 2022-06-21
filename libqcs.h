@@ -26,7 +26,7 @@ typedef struct ResultHandle ResultHandle;
 
 // ANCHOR: ExecutionData
 typedef struct ExecutionData {
-    unsigned int execution_duration_microseconds;
+    unsigned long execution_duration_microseconds;
     struct ResultHandle *handle;
 } ExecutionData;
 // ANCHOR_END: ExecutionData

@@ -3,17 +3,19 @@
 // C doesn't have namespaces, so exported functions should contain the module name
 #![allow(clippy::module_name_repetitions)]
 
+extern crate core;
+
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
+use std::mem::ManuallyDrop;
+use std::os::raw::{c_char, c_double, c_uint, c_ulong, c_ushort};
+use std::ptr::null;
+use std::time::Duration;
 
 use eyre::{eyre, Result};
-use std::os::raw::{c_char, c_double, c_uint, c_ushort};
 
 pub use crate::qpu::execute_on_qpu;
 pub use crate::qvm::execute_on_qvm;
-use std::collections::HashMap;
-use std::mem::ManuallyDrop;
-use std::ptr::null;
-use std::time::Duration;
 
 mod qpu;
 mod qvm;
@@ -177,14 +179,14 @@ pub enum ExecutionResult {
 
 #[repr(C)]
 pub struct ExecutionData {
-    pub execution_duration_microseconds: c_uint,
+    pub execution_duration_microseconds: c_ulong,
     pub handle: *mut ResultHandle,
 }
 
 impl From<qcs::ExecutionData> for ExecutionData {
     fn from(data: qcs::ExecutionData) -> Self {
         ExecutionData {
-            execution_duration_microseconds: data.duration.unwrap_or_default().as_micros() as c_uint,
+            execution_duration_microseconds: data.duration.unwrap_or_default().as_micros() as c_ulong,
             handle: ResultHandle::from_data(data.registers),
         }
     }
@@ -203,8 +205,8 @@ impl ExecutionResult {
                 let c_string = CString::from_raw(error);
                 Err(eyre!(c_string.into_string()?))
             }
-            Self::Success(ExecutionData{ execution_duration_microseconds: billable_duration_microseconds, handle}) => Ok(qcs::ExecutionData{
-                duration: Some(Duration::from_micros(u64::from(billable_duration_microseconds))),
+            Self::Success(ExecutionData { execution_duration_microseconds: billable_duration_microseconds, handle }) => Ok(qcs::ExecutionData {
+                duration: Some(Duration::from_micros(billable_duration_microseconds)),
                 registers: Box::from_raw(handle).into_rust(),
             }),
         }
