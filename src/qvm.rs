@@ -32,9 +32,7 @@ pub unsafe extern "C" fn execute_on_qvm(executable: *mut Executable) -> *mut Exe
 }
 
 /// Implements the actual logic of [`execute_on_qvm`] but with `?` support.
-unsafe fn _execute_on_qvm(
-    executable: *mut Executable,
-) -> Result<qcs::ExecutionData, String> {
+unsafe fn _execute_on_qvm(executable: *mut Executable) -> Result<qcs::ExecutionData, String> {
     // SAFETY: If this wasn't constructed already, was already freed, or is NULL, bad things
     // happen here.
     let mut executable = Box::from_raw(executable);
