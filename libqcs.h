@@ -56,6 +56,7 @@ typedef struct ExecutionResult {
 typedef enum DataType_Tag {
     DataType_Byte,
     DataType_Real,
+    DataType_Short,
 } DataType_Tag;
 // ANCHOR_END: DataType_Tag
 
@@ -68,6 +69,9 @@ typedef struct DataType {
         };
         struct {
             double **real;
+        };
+        struct {
+            short **short_;
         };
     };
 } DataType;

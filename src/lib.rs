@@ -8,7 +8,7 @@ extern crate core;
 use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::mem::ManuallyDrop;
-use std::os::raw::{c_char, c_double, c_uint, c_ulong, c_ushort};
+use std::os::raw::{c_char, c_double, c_short, c_uint, c_ulong, c_ushort};
 use std::ptr::null;
 use std::time::Duration;
 
@@ -186,7 +186,8 @@ pub struct ExecutionData {
 impl From<qcs::ExecutionData> for ExecutionData {
     fn from(data: qcs::ExecutionData) -> Self {
         ExecutionData {
-            execution_duration_microseconds: data.duration.unwrap_or_default().as_micros() as c_ulong,
+            execution_duration_microseconds: data.duration.unwrap_or_default().as_micros()
+                as c_ulong,
             handle: ResultHandle::from_data(data.registers),
         }
     }
@@ -205,7 +206,10 @@ impl ExecutionResult {
                 let c_string = CString::from_raw(error);
                 Err(eyre!(c_string.into_string()?))
             }
-            Self::Success(ExecutionData { execution_duration_microseconds: billable_duration_microseconds, handle }) => Ok(qcs::ExecutionData {
+            Self::Success(ExecutionData {
+                execution_duration_microseconds: billable_duration_microseconds,
+                handle,
+            }) => Ok(qcs::ExecutionData {
                 duration: Some(Duration::from_micros(billable_duration_microseconds)),
                 registers: Box::from_raw(handle).into_rust(),
             }),
@@ -291,6 +295,7 @@ pub struct RegisterData {
 pub enum DataType {
     Byte(*mut *mut c_char),
     Real(*mut *mut c_double),
+    Short(*mut *mut c_short),
 }
 
 impl RegisterData {
@@ -342,6 +347,22 @@ impl RegisterData {
 
                 qcs::RegisterData::F64(results)
             }
+            DataType::Short(data_per_shot) => {
+                // SAFETY: If any of these pieces are wrong, this will read arbitrary memory
+                let results: Vec<*mut i16> = Vec::from_raw_parts(
+                    data_per_shot,
+                    number_of_shots as usize,
+                    number_of_shots as usize,
+                );
+
+                let results: Vec<Vec<i16>> = results
+                    .into_iter()
+                    // SAFETY: If any of these pieces are wrong, this will read arbitrary memory
+                    .map(|ptr| Vec::from_raw_parts(ptr, shot_length as usize, shot_length as usize))
+                    .collect();
+
+                qcs::RegisterData::I16(results)
+            }
         }
     }
 }
@@ -390,7 +411,7 @@ impl From<Vec<Vec<i16>>> for RegisterData {
 
         #[allow(clippy::cast_possible_truncation)]
         Self {
-            data: DataType::Byte(ManuallyDrop::new(results).as_mut_ptr().cast::<*mut i8>()),
+            data: DataType::Short(ManuallyDrop::new(results).as_mut_ptr()),
             number_of_shots,
             shot_length,
         }
